@@ -31,5 +31,5 @@ Checking it works
 -----------------
 
 - ssh to the OpenMSA as root
-- run: `tstsms status`
+- run: `tstsms ISALIVE`
 
