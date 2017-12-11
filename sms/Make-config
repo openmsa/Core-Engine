@@ -1,0 +1,108 @@
+##############################################################################
+#
+#    file                 : Make-config
+#    created              : Mon Dec 11 23:47:37 CET 2000
+#
+##############################################################################
+
+SHELL = /bin/sh
+
+# The C compiler name
+CC = gcc
+
+# The architecture used
+ARCH = $(shell uname -m)
+
+# The C++ Compiler name
+CPP = g++
+
+# The Lex program name
+LEX = lex
+
+# The Yacc program name
+YACC = yacc
+
+# The librarian (ook?)
+LIBRARIAN = ar
+
+# the Php program name
+PHP = php
+PHP_HOME = 
+
+gcc_CCOPT = -Wall -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Winline -g -funsigned-char -Wno-pointer-sign
+
+# For C++, the following option is invalid:
+# -Wmissing-prototypes
+# -Wmissing-declarations
+# -Wnested-externs
+# -Wno-pointer-sign
+g++_CCOPT = -Wall -Winline -g -funsigned-char
+
+# The debug flag
+C_DEBUG_FLAG =
+
+# The optimization flag
+C_OPTIMIZE_FLAG =
+
+# The defined symbols
+C_DEFINES = -D_REENTRANT -D_THREAD_SAFE -DUSE_OLD_SOCKADDR -DPTHREADS
+
+# Options for the librarian
+LIBRARIAN_OPT = qv
+
+# ODBC
+ifdef USE_ODBC
+ODBC_LDFLAGS =  -lodbc
+ifeq ($(ARCH), 'x86_64')
+ODBC_CFLAGS  = -DBUILD_REAL_64_BIT_MODE -DSIZEOF_LONG=8 -fshort-wchar
+else
+ODBC_CFLAGS  = -fshort-wchar
+endif
+endif
+
+# Zlib Specific
+ZLIB_CFLAGS = -I$(SB_ROOT)/common/zlib/$(ARCH)/include
+ZLIB_LDFLAGS = $(SB_ROOT)/common/zlib/$(ARCH)/lib/libz.a
+
+# Net-snmp Specific
+NET_SNMP_CFLAGS = -I$(SB_ROOT)/common/net-snmp/$(ARCH)/include
+NET_SNMP_LDFLAGS = $(SB_ROOT)/common/net-snmp/$(ARCH)/lib/libnetsnmp.a
+
+# Curl Specific
+CURL_LDFLAGS = $(SB_ROOT)/common/curl/$(ARCH)/lib/libcurl.a
+
+# OpenSSL Specific
+OPENSSL_CFLAGS=-I$(SB_ROOT)/common/openssl/$(ARCH)/include 
+OPENSSL_LDFLAGS=$(SB_ROOT)/common/openssl/$(ARCH)/lib/libssl.a $(SB_ROOT)/common/openssl/$(ARCH)/lib/libcrypto.a -lresolv
+
+# PHP Specific
+PHP_CFLAGS=-I$(SB_ROOT)/common/php/$(ARCH)/include/php -I$(SB_ROOT)/common/php/$(ARCH)/include/php/main -I$(SB_ROOT)/common/php/$(ARCH)/include/php/Zend -I$(SB_ROOT)/common/php/$(ARCH)/include/php/TSRM
+PHP_LDFLAGS=$(SB_ROOT)/common/php/$(ARCH)/lib/libphp7.a -lxml2 -lxslt -lexslt $(CURL_LDFLAGS) $(NET_SNMP_LDFLAGS) $(OPENSSL_LDFLAGS) -lexpect $(ZLIB_LDFLAGS)
+
+# PCRE Specific
+PCRE_CFLAGS = -I$(SB_ROOT)/common/pcre/$(ARCH)/include
+PCRE_LDFLAGS= $(SB_ROOT)/common/pcre/$(ARCH)/lib/libpcre.a
+
+# The standard C includes
+STD_C_INCLUDES = -I include
+SYSTEM_LDFLAGS = -lm -lpthread -lrt -ldl -lutil
+COMMON_CFLAGS = $(ZLIB_CFLAGS) $(NET_SNMP_CFLAGS) $(OPENSSL_CFLAGS) $(PHP_CFLAGS) $(HDF5_CFLAGS) $(PCRE_CFLAGS)
+
+# Every C compiler options
+CFLAGS = $(C_DEBUG_FLAG) $(C_OPTIMIZE_FLAG) $($(CC)_CCOPT) $(C_DEFINES) $(C_INCLUDES) $(STD_C_INCLUDES) $(DMALLOC_C_INCLUDES) $(DMALLOC_CFLAGS) $(USER_CFLAGS) $(C_STATIC_FLAGS) $(COMMON_CFLAGS) $(ODBC_CFLAGS)
+CPPFLAGS =  $(C_DEBUG_FLAG) $(C_OPTIMIZE_FLAG) $($(CPP)_CCOPT) $(C_DEFINES) $(C_INCLUDES) $(STD_C_INCLUDES) $(DMALLOC_C_INCLUDES) $(DMALLOC_CFLAGS) $(USER_CFLAGS) $(C_STATIC_FLAGS) $(COMMON_CFLAGS)
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Every linker options
+LDFLAGS = $(STATIC_LDFLAGS) $(CONFIG_LDFLAGS) $(ODBC_LDFLAGS) $(DMALLOC_LDFLAGS) $(STD_C_LIBS) $(USER_LDFLAGS) $(OS_SPECIFIC_SYSTEM_LDFLAGS) $(SYSTEM_LDFLAGS)
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Every Lex options
+LEXFLAGS = $(DEFAULT_LEXFLAGS) $(USER_LEXFLAGS)
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Every Yacc options
+YACCFLAGS = $(DEFAULT_YACCFLAGS) $(USER_YACCFLAGS)
