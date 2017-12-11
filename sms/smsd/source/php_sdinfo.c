@@ -1,3 +1,7 @@
+/**
+ * Copyright UBIqube Solutions 2007
+ * Creation Date: Thu Aug 23 15:02:24 UTC 2007
+ */
 
 #include "log.h"
 #include "smsd.h"

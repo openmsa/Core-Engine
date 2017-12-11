@@ -1,3 +1,8 @@
+/*
+ * Copyright UBIqube Solutions 2008
+ * @file php.c
+ * Creation Date: Jun 16, 2008
+ */
 
 #include <stdio.h>
 #include <pthread.h>
