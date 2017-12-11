@@ -1,3 +1,8 @@
+/**
+ * Copyright UBIqube Solutions 2008
+ * @file php_db.c
+ * Creation Date: Jun 16, 2008
+ */
 
 #include "sms_php.h"
 #include "sms_php_functions_misc.h"

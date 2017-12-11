@@ -1,3 +1,8 @@
+/*
+ * Copyright UBIqube Solutions 2008
+ * File: generic_router.h
+ * Creation Date: May 30, 2008
+ */
 
 
 #ifndef GENERIC_ROUTER_H_

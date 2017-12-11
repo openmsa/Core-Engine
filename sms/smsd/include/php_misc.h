@@ -1,3 +1,8 @@
+/*
+ * Copyright UBIqube Solutions 2008
+ * File: php_misc.h
+ * Creation Date: May 30, 2008
+ */
 
 
 
