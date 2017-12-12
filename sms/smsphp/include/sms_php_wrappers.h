@@ -14,14 +14,14 @@
   {\
     long a;\
     char *ret;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &a) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &a) == FAILURE)\
     {\
       RETURN_NULL();\
     }\
     ret = fname(a);\
     if (ret)\
     {\
-      RETURN_STRING(ret);\
+      RETURN_STRING(ret, 1);\
     }\
     RETURN_NULL();\
   }
@@ -34,14 +34,14 @@
     long a;\
     long b;\
     char *ret;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "ll", &a, &b) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll", &a, &b) == FAILURE)\
     {\
       RETURN_NULL();\
     }\
     ret = fname(a, b);\
     if (ret)\
     {\
-      RETURN_STRING(ret);\
+      RETURN_STRING(ret, 1);\
     }\
     RETURN_NULL();\
   }
@@ -55,7 +55,7 @@
     ret = fname();\
     if (ret)\
     {\
-      RETURN_STRING(ret);\
+      RETURN_STRING(ret, 1);\
     }\
     RETURN_NULL();\
   }
@@ -68,14 +68,14 @@
   {\
     long a;\
     char *ret;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &a) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &a) == FAILURE)\
     {\
       RETURN_NULL();\
     }\
     ret = fname(a);\
     if (ret)\
     {\
-      RETVAL_STRING(ret);\
+      RETVAL_STRING(ret, 1);\
       free(ret);\
       return;\
     }\
@@ -92,14 +92,14 @@
     char *b;\
     long b_len;\
     char *ret;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "ls", &a, &b, &b_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ls", &a, &b, &b_len) == FAILURE)\
     {\
       RETURN_NULL();\
     }\
     ret = fname(a, b);\
     if (ret)\
     {\
-      RETVAL_STRING(ret);\
+      RETVAL_STRING(ret, 1);\
       free(ret);\
       return;\
     }\
@@ -115,14 +115,14 @@
     char *a;\
     long a_len;\
     char *ret;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &a, &a_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &a, &a_len) == FAILURE)\
     {\
       RETURN_NULL();\
     }\
     ret = fname(a);\
     if (ret)\
     {\
-      RETVAL_STRING(ret);\
+      RETVAL_STRING(ret, 1);\
       free(ret);\
       return;\
     }\
@@ -139,14 +139,14 @@
     char *c;\
     long c_len;\
     char *ret;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "lls", &a, &b, &c, &c_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lls", &a, &b, &c, &c_len) == FAILURE)\
     {\
       RETURN_NULL();\
     }\
     ret = fname(a, b, c);\
     if (ret)\
     {\
-      RETURN_STRING(ret);\
+      RETURN_STRING(ret, 1);\
     }\
     RETURN_NULL();\
   }
@@ -160,14 +160,14 @@
     long a;\
     long b;\
     char *result;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "ll", &a, &b) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll", &a, &b) == FAILURE)\
     {\
       RETURN_NULL();\
     }\
     result = fname(a, b);\
     if (result)\
     {\
-      RETVAL_STRING(result);\
+      RETVAL_STRING(result, 1);\
       free(result);\
       return;\
     }\
@@ -187,14 +187,14 @@
     char *d;\
     long d_len;\
     char *result;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "llss", &a, &b, &c, &c_len, &d, &d_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "llss", &a, &b, &c, &c_len, &d, &d_len) == FAILURE)\
     {\
       RETURN_NULL();\
     }\
     result = fname(a, b, c, d);\
     if (result)\
     {\
-      RETVAL_STRING(result);\
+      RETVAL_STRING(result, 1);\
       free(result);\
       return;\
     }\
@@ -217,7 +217,7 @@
     long f_len;\
     char *g;\
     long g_len;\
-   if (zend_parse_parameters(ZEND_NUM_ARGS(), "llsssss", &a, &b, &c, &c_len, &d, &d_len, &e, &e_len, &f, &f_len, &g, &g_len) == FAILURE)\
+   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "llsssss", &a, &b, &c, &c_len, &d, &d_len, &e, &e_len, &f, &f_len, &g, &g_len) == FAILURE)\
     {\
       return;\
     }\
@@ -233,7 +233,7 @@
     long b_len;\
     char *c;\
     long c_len;\
-   if (zend_parse_parameters(ZEND_NUM_ARGS(), "lss", &a, &b, &b_len, &c, &c_len) == FAILURE)\
+   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lss", &a, &b, &b_len, &c, &c_len) == FAILURE)\
     {\
       return;\
     }\
@@ -245,7 +245,7 @@
   static ZEND_FUNCTION(fname)\
   {\
     long a;\
-   if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &a) == FAILURE)\
+   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &a) == FAILURE)\
     {\
       return;\
     }\
@@ -258,7 +258,7 @@
   {\
     long a;\
     long b;\
-   if (zend_parse_parameters(ZEND_NUM_ARGS(), "ll", &a, &b) == FAILURE)\
+   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll", &a, &b) == FAILURE)\
     {\
       return;\
     }\
@@ -275,7 +275,7 @@
     char *c;\
     long c_len;\
     long d;\
-   if (zend_parse_parameters(ZEND_NUM_ARGS(), "lssl", &a, &b, &b_len, &c, &c_len, &d) == FAILURE)\
+   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lssl", &a, &b, &b_len, &c, &c_len, &d) == FAILURE)\
     {\
       return;\
     }\
@@ -293,7 +293,7 @@
     long c_len;\
     char *d;\
     long d_len;\
-   if (zend_parse_parameters(ZEND_NUM_ARGS(), "lsss", &a, &b, &b_len, &c, &c_len, &d, &d_len) == FAILURE)\
+   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lsss", &a, &b, &b_len, &c, &c_len, &d, &d_len) == FAILURE)\
     {\
       return;\
     }\
@@ -317,7 +317,7 @@
     long f_len;\
     char *g;\
     long g_len;\
-   if (zend_parse_parameters(ZEND_NUM_ARGS(), "lssssss", &a, &b, &b_len, &c, &c_len, &d, &d_len, &e, &e_len, &f, &f_len, &g, &g_len) == FAILURE)\
+   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lssssss", &a, &b, &b_len, &c, &c_len, &d, &d_len, &e, &e_len, &f, &f_len, &g, &g_len) == FAILURE)\
     {\
       return;\
     }\
@@ -339,7 +339,7 @@
     long e_len;\
     char *f;\
     long f_len;\
-   if (zend_parse_parameters(ZEND_NUM_ARGS(), "lsssss", &a, &b, &b_len, &c, &c_len, &d, &d_len, &e, &e_len, &f, &f_len) == FAILURE)\
+   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lsssss", &a, &b, &b_len, &c, &c_len, &d, &d_len, &e, &e_len, &f, &f_len) == FAILURE)\
     {\
       return;\
     }\
@@ -359,7 +359,7 @@
     long d_len;\
     char *e;\
     long e_len;\
-   if (zend_parse_parameters(ZEND_NUM_ARGS(), "lssss", &a, &b, &b_len, &c, &c_len, &d, &d_len, &e, &e_len) == FAILURE)\
+   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lssss", &a, &b, &b_len, &c, &c_len, &d, &d_len, &e, &e_len) == FAILURE)\
     {\
       return;\
     }\
@@ -376,7 +376,7 @@
     long c;\
     char *d;\
     long d_len;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "lsls", &a, &b, &b_len, &c, &d, &d_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lsls", &a, &b, &b_len, &c, &d, &d_len) == FAILURE)\
     {\
       return;\
     }\
@@ -395,7 +395,7 @@
     long d_len;\
     char *e;\
     long e_len;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "lslss", &a, &b, &b_len, &c, &d, &d_len, &e, &e_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lslss", &a, &b, &b_len, &c, &d, &d_len, &e, &e_len) == FAILURE)\
     {\
       return;\
     }\
@@ -416,7 +416,7 @@
     long e_len;\
     char *f;\
     long f_len;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "lslsss", &a, &b, &b_len, &c, &d, &d_len, &e, &e_len, &f, &f_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lslsss", &a, &b, &b_len, &c, &d, &d_len, &e, &e_len, &f, &f_len) == FAILURE)\
     {\
       return;\
     }\
@@ -439,7 +439,7 @@
     long f_len;\
     char *g;\
     long g_len;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "lslssss", &a, &b, &b_len, &c, &d, &d_len, &e, &e_len, &f, &f_len,&g, &g_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lslssss", &a, &b, &b_len, &c, &d, &d_len, &e, &e_len, &f, &f_len,&g, &g_len) == FAILURE)\
     {\
       return;\
     }\
@@ -462,7 +462,7 @@
     zval **var;\
     char **str_tab;\
     long ret;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "llas", &a, &b, &d, &e, &e_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "llas", &a, &b, &d, &e, &e_len) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -498,14 +498,14 @@
     char *a;\
     long a_len;\
     char *ret;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &a, &a_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &a, &a_len) == FAILURE)\
     {\
       RETURN_NULL();\
     }\
     ret = fname(a);\
     if (ret)\
     {\
-      RETURN_STRING(ret);\
+      RETURN_STRING(ret, 1);\
     }\
     RETURN_NULL();\
   }
@@ -520,14 +520,14 @@
     char *b;\
     long b_len;\
     char *ret;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "ss", &a, &a_len, &b, &b_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &a, &a_len, &b, &b_len) == FAILURE)\
     {\
       RETURN_NULL();\
     }\
     ret = fname(a, b);\
     if (ret)\
     {\
-      RETURN_STRING(ret);\
+      RETURN_STRING(ret, 1);\
     }\
     RETURN_NULL();\
   }
@@ -542,14 +542,14 @@
     char *b;\
     long b_len;\
     char *ret;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "ss", &a, &a_len, &b, &b_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &a, &a_len, &b, &b_len) == FAILURE)\
     {\
       RETURN_NULL();\
     }\
     ret = fname(a, b);\
     if (ret)\
     {\
-      RETVAL_STRING(ret);\
+      RETVAL_STRING(ret, 1);\
       free(ret);\
       return;\
     }\
@@ -564,7 +564,7 @@
     char *a;\
     long a_len;\
     int ret;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &a, &a_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &a, &a_len) == FAILURE)\
     {\
       RETURN_NULL();\
     }\
@@ -582,7 +582,7 @@
     char *b;\
     long b_len;\
     int ret;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "ss", &a, &a_len, &b, &b_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss", &a, &a_len, &b, &b_len) == FAILURE)\
     {\
       RETURN_NULL();\
     }\
@@ -602,7 +602,7 @@
     char *c;\
     long c_len;\
     int ret;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "sss", &a, &a_len, &b, &b_len, &c, &c_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss", &a, &a_len, &b, &b_len, &c, &c_len) == FAILURE)\
     {\
       RETURN_NULL();\
     }\
@@ -621,14 +621,14 @@
     char *c;\
     long c_len;\
     char *ret;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "lss", &a, &b, &b_len, &c, &c_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lss", &a, &b, &b_len, &c, &c_len) == FAILURE)\
     {\
       RETURN_NULL();\
     }\
     ret = fname(a, b, c);\
     if (ret)\
     {\
-      RETVAL_STRING(ret);\
+      RETVAL_STRING(ret, 1);\
       free(ret); \
       return;\
     }\
@@ -647,14 +647,14 @@
     char *c;\
     long c_len;\
     char *ret;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "sss", &a, &a_len, &b, &b_len, &c, &c_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss", &a, &a_len, &b, &b_len, &c, &c_len) == FAILURE)\
     {\
       RETURN_NULL();\
     }\
     ret = fname(a, b, c);\
     if (ret)\
     {\
-      RETURN_STRING(ret);\
+      RETURN_STRING(ret, 1);\
     }\
     RETURN_NULL();\
   }
@@ -671,14 +671,14 @@
     char *c;\
     long c_len;\
     char *ret;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "sss", &a, &a_len, &b, &b_len, &c, &c_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss", &a, &a_len, &b, &b_len, &c, &c_len) == FAILURE)\
     {\
       RETURN_NULL();\
     }\
     ret = fname(a, b, c);\
     if (ret)\
     {\
-      RETVAL_STRING(ret);\
+      RETVAL_STRING(ret, 1);\
       free(ret);\
       return;\
     }\
@@ -699,7 +699,7 @@
   static ZEND_FUNCTION(fname)\
   {\
     long a;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &a) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &a) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -713,7 +713,7 @@
   {\
     long a;\
     long b;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "ll", &a, &b) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll", &a, &b) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -728,7 +728,7 @@
     long a;\
     long b;\
     long c;\
-   if (zend_parse_parameters(ZEND_NUM_ARGS(), "lll", &a, &b, &c) == FAILURE)\
+   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lll", &a, &b, &c) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -745,7 +745,7 @@
     long c;\
     long d;\
     long e;\
-  if (zend_parse_parameters(ZEND_NUM_ARGS(), "lllll", &a, &b, &c, &d, &e) == FAILURE)\
+  if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lllll", &a, &b, &c, &d, &e) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -761,7 +761,7 @@
     long b;\
     char *d;\
     long d_len;\
-   if (zend_parse_parameters(ZEND_NUM_ARGS(), "lls", &a, &b, &d, &d_len) == FAILURE)\
+   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lls", &a, &b, &d, &d_len) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -778,7 +778,7 @@
     long c;\
     char *d;\
     long d_len;\
-   if (zend_parse_parameters(ZEND_NUM_ARGS(), "llls", &a, &b, &c, &d, &d_len) == FAILURE)\
+   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "llls", &a, &b, &c, &d, &d_len) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -796,7 +796,7 @@
     char *d;\
     long d_len;\
     long e;\
-   if (zend_parse_parameters(ZEND_NUM_ARGS(), "lllsl", &a, &b, &c, &d, &d_len, &e) == FAILURE)\
+   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lllsl", &a, &b, &c, &d, &d_len, &e) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -816,7 +816,7 @@
     long e;\
     char *f;\
     long f_len;\
-   if (zend_parse_parameters(ZEND_NUM_ARGS(), "lllsls", &a, &b, &c, &d, &d_len, &e, &f, &f_len) == FAILURE)\
+   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lllsls", &a, &b, &c, &d, &d_len, &e, &f, &f_len) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -838,7 +838,7 @@
     long f_len;\
     char *g;\
     long g_len;\
-   if (zend_parse_parameters(ZEND_NUM_ARGS(), "lllslss", &a, &b, &c, &d, &d_len, &e, &f, &f_len, &g, &g_len) == FAILURE)\
+   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lllslss", &a, &b, &c, &d, &d_len, &e, &f, &f_len, &g, &g_len) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -853,7 +853,7 @@
     long a;\
     char *b;\
     long s_len;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "ls", &a, &b, &s_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ls", &a, &b, &s_len) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -869,7 +869,7 @@
     char *b;\
     long s_len;\
     long c;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "lsl", &a, &b, &s_len, &c) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lsl", &a, &b, &s_len, &c) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -887,7 +887,7 @@
     long c;\
     char *d;\
     long d_len;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "lsls", &a, &b, &b_len, &c, &d, &d_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lsls", &a, &b, &b_len, &c, &d, &d_len) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -904,7 +904,7 @@
     long b_len;\
     char *d;\
     long d_len;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "lss", &a, &b, &b_len, &d, &d_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lss", &a, &b, &b_len, &d, &d_len) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -922,7 +922,7 @@
     long c_len;\
     char *d;\
     long d_len;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "llss", &a, &b, &c, &c_len, &d, &d_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "llss", &a, &b, &c, &c_len, &d, &d_len) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -938,7 +938,7 @@
     long a_len;\
     long b;\
     long c;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "sll", &a, &a_len, &b, &c) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sll", &a, &a_len, &b, &c) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -963,7 +963,7 @@
     char *h;\
     long h_len;\
     long i;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "sllllsssl", &a, &a_len, &b, &c, &d, &e, &f, &f_len, &g, &g_len, &h, &h_len, &i) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sllllsssl", &a, &a_len, &b, &c, &d, &e, &f, &f_len, &g, &g_len, &h, &h_len, &i) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -977,7 +977,7 @@
   {\
     long a;\
     zval *b;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "la", &a, &b) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "la", &a, &b) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -993,7 +993,7 @@
     long b;\
     long c;\
     zval *d;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "llla", &a, &b, &c, &d) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "llla", &a, &b, &c, &d) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -1008,7 +1008,7 @@
     long a;\
     long b;\
     zval *c;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "lla", &a, &b, &c) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lla", &a, &b, &c) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -1024,7 +1024,7 @@
     char *b;\
     long b_len;\
     zval *c;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "lsa", &a, &b, &b_len, &c) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lsa", &a, &b, &b_len, &c) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -1041,7 +1041,7 @@
     long b_len;\
     zval *c;\
     zval *d;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "lsaa", &a, &b, &b_len, &c, &d) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lsaa", &a, &b, &b_len, &c, &d) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -1054,7 +1054,7 @@
   static ZEND_FUNCTION(fname)\
   {\
     zval *a;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "a", &a) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a", &a) == FAILURE)\
     {\
       RETURN_LONG(-1);\
     }\
@@ -1068,7 +1068,7 @@
   {\
     char *b;\
     long s_len;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &b, &s_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &b, &s_len) == FAILURE)\
     {\
       return;\
     }\
@@ -1083,7 +1083,7 @@
     long a;\
     char *b;\
     long b_len;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "ls", &a, &b, &b_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ls", &a, &b, &b_len) == FAILURE)\
     {\
       return;\
     }\
@@ -1097,7 +1097,7 @@
   {\
     char *b;\
     long s_len;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &b, &s_len) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &b, &s_len) == FAILURE)\
     {\
       RETURN_FALSE;\
     }\
@@ -1114,7 +1114,7 @@
   static ZEND_FUNCTION(fname)\
   {\
     long a;\
-    if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &a) == FAILURE)\
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &a) == FAILURE)\
     {\
       RETURN_FALSE;\
     }\
@@ -1135,7 +1135,7 @@
     char *c;\
     long c_len;\
     zend_bool d = 0;\
-   if (zend_parse_parameters(ZEND_NUM_ARGS(), "lssb", &a, &b, &b_len, &c, &c_len, &d) == FAILURE)\
+   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lssb", &a, &b, &b_len, &c, &c_len, &d) == FAILURE)\
     {\
       return;\
     }\
@@ -1158,7 +1158,7 @@
     char *f;\
     long f_len;\
     zend_bool g = 0;\
-   if (zend_parse_parameters(ZEND_NUM_ARGS(), "lsssssb", &a, &b, &b_len, &c, &c_len, &d, &d_len, &e, &e_len, &f, &f_len, &g) == FAILURE)\
+   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lsssssb", &a, &b, &b_len, &c, &c_len, &d, &d_len, &e, &e_len, &f, &f_len, &g) == FAILURE)\
     {\
       return;\
     }\
@@ -1179,7 +1179,7 @@
     char *e;\
     long e_len;\
     zend_bool f = 0;\
-   if (zend_parse_parameters(ZEND_NUM_ARGS(), "lssssb", &a, &b, &b_len, &c, &c_len, &d, &d_len, &e, &e_len, &f) == FAILURE)\
+   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lssssb", &a, &b, &b_len, &c, &c_len, &d, &d_len, &e, &e_len, &f) == FAILURE)\
     {\
       return;\
     }\
@@ -1198,7 +1198,7 @@
     char *d;\
     long d_len;\
     zend_bool e = 0;\
-   if (zend_parse_parameters(ZEND_NUM_ARGS(), "lsssb", &a, &b, &b_len, &c, &c_len, &d, &d_len, &e) == FAILURE)\
+   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lsssb", &a, &b, &b_len, &c, &c_len, &d, &d_len, &e) == FAILURE)\
     {\
       return;\
     }\
