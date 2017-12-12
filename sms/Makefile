@@ -14,3 +14,11 @@ SB_ROOT = ${SMS_BASE}
 SUBDIRS = smsd
 
 -include ${MAKE_DEFAULT}
+
+
+install:
+	./install.sh
+
+restart:
+	/opt/sms/etc/stop.sh smsd
+	/opt/sms/etc/start.sh smsd
