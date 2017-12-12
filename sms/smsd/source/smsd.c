@@ -425,6 +425,7 @@ int main(int argc, char *argv[])
   int err = 0;
   struct timeval tv;
   struct tm startts;
+  void ***tsrm_ls;
   void *task_handle;
   void *log_handle;
 
@@ -539,7 +540,7 @@ int main(int argc, char *argv[])
       exit(-1);
     }
 
-  ret = sms_sapi_php_init();
+  ret = sms_sapi_php_init(&tsrm_ls);
   if (ret)
     {
       fprintf(stderr, "error %d in initializing php\n", ret);
@@ -826,7 +827,7 @@ int main(int argc, char *argv[])
       freez(statdynipupThreadMutex);
       freez(statsendserialThreadMutex);
 
-      sms_sapi_php_shutdown();
+      sms_sapi_php_shutdown(tsrm_ls);
       VerbEnd();
       close(bfd);
       freez(activeThreadMutex);

@@ -157,9 +157,8 @@ int sms_sd_forceasset(long lcsp, long lsd_info)
  */
 int sms_bd_init_provstatus(long lcsp, long lsd_info, int num_stages, zval *lstage_names)
 {
-  zend_string *name;
-  zval *row;
-  zval *value;
+  zval **row;
+  zval **value;
   sd_info_t *sd_info = (sd_info_t *) lsd_info;
   sd_like_t *SD;
   client_state_t *csp = (client_state_t *) lcsp;
@@ -179,20 +178,18 @@ int sms_bd_init_provstatus(long lcsp, long lsd_info, int num_stages, zval *lstag
 
   for (i = 0; i < num_stages; i++)
   {
-    row = zend_hash_index_find(Z_ARRVAL_P(lstage_names), i);
-    if (row != NULL)
+    ret = zend_hash_index_find(Z_ARRVAL_P(lstage_names), i, (void **)&row);
+    if (ret != FAILURE)
     {
-      name = zend_string_init("name", sizeof("name") - 1, 0);
-      value = zend_hash_find(Z_ARRVAL_P(row), name);
-      zend_string_release(name);
-      if (value != NULL)
+      ret = zend_hash_find(Z_ARRVAL_P(*row), "name", sizeof("name"), (void **)&value);
+      if (ret != FAILURE)
       {
-        stage_names[i] = strdup(Z_STRVAL_P(value));
+        stage_names[i] = strdup(Z_STRVAL_P(*value));
         GLogDEBUG(log_handle, 15, "Stage %d -> %s", i, stage_names[i]);
       }
     }
 
-    if (row == NULL || value == NULL)
+    if (ret == FAILURE)
     {
       ret = ERR_LOCAL_PHP;
       break;
@@ -548,8 +545,7 @@ int sms_bd_delete_conf_objects(long lcsp, long lsd_info, char *name)
 
 int sms_bd_set_log(long lsd_info, zval *zlog)
 {
-  zend_string *name;
-  zval *value;
+  zval **value;
   sd_info_t *sd_info = (sd_info_t *)lsd_info;
   fildelog_like_t fildelog;
   int ret;
@@ -564,30 +560,24 @@ int sms_bd_set_log(long lsd_info, zval *zlog)
   strncpy(fildelog.cli_prefix, sd_info->SD.sd_cli_prefix, CLI_PREFIX_LEN);
   fildelog.seqnum = sd_info->SD.sd_seqnum;
 
-  name = zend_string_init("log_msg", sizeof("log_msg") - 1, 0);
-  value = zend_hash_find(Z_ARRVAL_P(zlog), name);
-  zend_string_release(name);
-  if (value != NULL)
+  ret = zend_hash_find(Z_ARRVAL_P(zlog), "log_msg", sizeof("log_msg"), (void **)&value);
+  if (ret != FAILURE)
   {
-    strncpy(fildelog.log_msg, Z_STRVAL_P(value), sizeof(fildelog.log_msg) - 1);
+    strncpy(fildelog.log_msg, Z_STRVAL_P(*value), sizeof(fildelog.log_msg) - 1);
     GLogDEBUG(log_handle, 15, "log_msg [%s]", fildelog.log_msg);
   }
 
-  name = zend_string_init("log_level", sizeof("log_level") - 1, 0);
-  value = zend_hash_find(Z_ARRVAL_P(zlog), name);
-  zend_string_release(name);
-  if (value != NULL)
+  ret = zend_hash_find(Z_ARRVAL_P(zlog), "log_level", sizeof("log_level"), (void **)&value);
+  if (ret != FAILURE)
   {
-    fildelog.log_level = strtol(Z_STRVAL_P(value), NULL, 0) % 8;
+    fildelog.log_level = strtol(Z_STRVAL_P(*value), NULL, 0) % 8;
     GLogDEBUG(log_handle, 15, "log_level [%d]", fildelog.log_level);
   }
 
-  name = zend_string_init("log_reference", sizeof("log_reference") - 1, 0);
-  value = zend_hash_find(Z_ARRVAL_P(zlog), name);
-  zend_string_release(name);
-  if (value != NULL)
+  ret = zend_hash_find(Z_ARRVAL_P(zlog), "log_reference", sizeof("log_reference"), (void **)&value);
+  if (ret != FAILURE)
   {
-    strncpy(fildelog.log_reference, Z_STRVAL_P(value), sizeof(fildelog.log_reference) - 1);
+    strncpy(fildelog.log_reference, Z_STRVAL_P(*value), sizeof(fildelog.log_reference) - 1);
     GLogDEBUG(log_handle, 15, "log_reference [%s]", fildelog.log_reference);
   }
 

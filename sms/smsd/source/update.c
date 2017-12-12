@@ -187,10 +187,10 @@ int dnsUpdate(char *SDid, char *ip)
 
   SMS_PHP_STARTUP_THREAD();
 
-  sms_mod_php_set_global_str("sdid", SDid);
-  sms_mod_php_set_global_str("ip", ip);
+  sms_mod_php_set_global_str("sdid", SDid TSRMLS_CC);
+  sms_mod_php_set_global_str("ip", ip TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDid, "smsd", "dns_update.php");
+  ret = sms_mod_php_execute_script(SDid, "smsd", "dns_update.php" TSRMLS_CC);
   if (ret)
   {
     GLogERROR(log_handle, " Script Failed\n");
@@ -1310,13 +1310,13 @@ int getPingStatus(client_state_t *csp, char *params, char *event)
 
   SMS_PHP_STARTUP_THREAD();
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  sms_mod_php_set_global_str("HOST", params);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  sms_mod_php_set_global_str("HOST", params TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script("debug", "smsd", "do_getPingStatus.php");
+  ret = sms_mod_php_execute_script("debug", "smsd", "do_getPingStatus.php" TSRMLS_CC);
   if (ret)
   {
-    char *str = sms_mod_php_get_global_str(PHP_GLOBAL_SMS_RETURN_BUF);
+    char *str = sms_mod_php_get_global_str(PHP_GLOBAL_SMS_RETURN_BUF TSRMLS_CC);
     if (!str)
     {
       str = "";

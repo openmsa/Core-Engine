@@ -290,11 +290,11 @@ int save_running_conf(sd_info_t *SDinfo, char *str_flag_update, int *version_cha
 
   config_type = get_router_config_type(SDinfo->SD.man_id, SDinfo->SD.mod_id);
 
-  sms_mod_php_set_global_str("flag_update", str_flag_update);
-  sms_mod_php_set_global_str("config_type", config_type);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_str("flag_update", str_flag_update TSRMLS_CC);
+  sms_mod_php_set_global_str("config_type", config_type TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, "smsd", "save_router_conf.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, "smsd", "save_router_conf.php" TSRMLS_CC);
   if (ret)
   {
     LogWrite(LOG_ERROR, " Script Failed\n");
@@ -303,7 +303,7 @@ int save_running_conf(sd_info_t *SDinfo, char *str_flag_update, int *version_cha
 
   if (version_changed)
   {
-    ret_buf = sms_mod_php_get_global_str(PHP_GLOBAL_SMS_RETURN_BUF);
+    ret_buf = sms_mod_php_get_global_str(PHP_GLOBAL_SMS_RETURN_BUF TSRMLS_CC);
     if (!ret_buf || !strlen(ret_buf))
     {
       *version_changed = 0;

@@ -35,14 +35,14 @@ int resolve_template(client_state_t *csp, char *SDid, char *template_path)
     goto end;
   }
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  sms_mod_php_set_global_str("template_path", template_path);
-  php_store_sdinfo(&SDinfo);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  sms_mod_php_set_global_str("template_path", template_path TSRMLS_CC);
+  php_store_sdinfo(&SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo.sdid, SDinfo.router_path, "do_resolve_template.php");
+  ret = sms_mod_php_execute_script(SDinfo.sdid, SDinfo.router_path, "do_resolve_template.php" TSRMLS_CC);
   if (ret)
   {
-    ret = sms_mod_php_execute_script(SDinfo.sdid, "smsd", "do_resolve_template.php");
+    ret = sms_mod_php_execute_script(SDinfo.sdid, "smsd", "do_resolve_template.php" TSRMLS_CC);
     if (ret)
     {
       LogWrite(LOG_ERROR, " Script Failed\n");
@@ -74,14 +74,14 @@ int resolve_template_buffer(client_state_t *csp, char *SDid, char *template_buff
     goto end;
   }
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  sms_mod_php_set_global_str("template_buffer", template_buffer);
-  php_store_sdinfo(&SDinfo);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  sms_mod_php_set_global_str("template_buffer", template_buffer TSRMLS_CC);
+  php_store_sdinfo(&SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo.sdid, SDinfo.router_path, "do_resolve_template.php");
+  ret = sms_mod_php_execute_script(SDinfo.sdid, SDinfo.router_path, "do_resolve_template.php" TSRMLS_CC);
   if (ret)
   {
-    ret = sms_mod_php_execute_script(SDinfo.sdid, "smsd", "do_resolve_template.php");
+    ret = sms_mod_php_execute_script(SDinfo.sdid, "smsd", "do_resolve_template.php" TSRMLS_CC);
     if (ret)
     {
       LogWrite(LOG_ERROR, " Script Failed\n");

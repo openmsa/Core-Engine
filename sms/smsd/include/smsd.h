@@ -22,7 +22,7 @@
 /** definition of the size of the prefix in the identification of a SD */
 #define PREFIXSIZE  CLI_PREFIX_LEN
 
-#define CVSNAME "$HeadURL: svn://svnserver.ubiqube.com/ubiqube/sms/tags/SMS_R16-2-2-137/smsd/include/smsd.h $"
+#define CVSNAME "$HeadURL: svn://svnserver.ubiqube.com/ubiqube/sms/tags/SMS_R16-2-2-145/smsd/include/smsd.h $"
 
 /** definition of the default port for listening */
 #define DEFAULTPORT            28169
