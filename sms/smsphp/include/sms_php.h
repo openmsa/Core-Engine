@@ -14,6 +14,19 @@
 #include <main/php_ini.h>
 #include <zend_ini.h>
 
+
+#ifdef ZTS
+#define PTSRMLS_D        void ****ptsrm_ls
+#define PTSRMLS_DC       , PTSRMLS_D
+#define PTSRMLS_C        &tsrm_ls
+#define PTSRMLS_CC       , PTSRMLS_C
+#else
+#define PTSRMLS_D
+#define PTSRMLS_DC
+#define PTSRMLS_C
+#define PTSRMLS_CC
+#endif
+
 extern PHP_MINIT_FUNCTION(sms);
 extern zend_module_entry sms_php_module_entry;
 
@@ -40,30 +53,36 @@ extern zend_module_entry sms_php_module_entry;
  * SAPI PHP MODULE
  */
 
-extern int sms_sapi_php_init(void);
-extern void sms_sapi_php_shutdown(void);
+extern int sms_sapi_php_init(PTSRMLS_D);
+extern void sms_sapi_php_shutdown(TSRMLS_D);
 
 /*
  * SMS PHP MODULE
  */
 #include "sms_db.h"
 
-extern void php_store_sdinfo(sd_info_t *sd_info);
-extern void php_store_cust_info(cust_info_t *cust_info);
+extern void php_store_sdinfo(sd_info_t *sd_info TSRMLS_DC);
+extern void php_store_cust_info(cust_info_t *cust_info TSRMLS_DC);
 
-extern int sms_mod_php_execute_script(char *sd_id, char *module, char *script);
+extern int sms_mod_php_execute_script(char *sd_id, char *module, char *script TSRMLS_DC);
 
-extern int sms_mod_php_set_global_ptr(char *var_name, void *ptr);
-extern long sms_mod_php_get_global_ptr(char *var_name);
-extern int sms_mod_php_set_global_bool(char *var_name, int val);
-extern int sms_mod_php_get_global_long(char *var_name);
-extern int sms_mod_php_set_global_long(char *var_name, long val);
+extern int sms_mod_php_set_global_ptr(char *var_name, void *ptr TSRMLS_DC);
+extern long sms_mod_php_get_global_ptr(char *var_name TSRMLS_DC);
+extern int sms_mod_php_set_global_bool(char *var_name, int val TSRMLS_DC);
+extern int sms_mod_php_get_global_long(char *var_name TSRMLS_DC);
+extern int sms_mod_php_set_global_long(char *var_name, long val TSRMLS_DC);
 
-extern int sms_mod_php_set_global_str(char *var_name, char *data);
-extern char *sms_mod_php_get_global_str(char *var_name);
-extern char *sms_mod_php_get_global_mem(char *var_name, int *len);
+extern int sms_mod_php_set_global_str(char *var_name, char *data TSRMLS_DC);
+extern char *sms_mod_php_get_global_str(char *var_name TSRMLS_DC);
+extern char *sms_mod_php_get_global_mem(char *var_name, int *len TSRMLS_DC);
 
-extern void sms_sapi_php_register_variables(zval *track_vars_array);
+extern void sms_sapi_php_register_variables(zval *track_vars_array TSRMLS_DC);
+
+typedef void (*tf_ctx_free)(void*);  /**< Function to call for releasing the ctx */
+
+extern int sms_mod_ctx_mgmt_add(char *type, void *ctx, tf_ctx_free ctx_free TSRMLS_DC);
+extern int sms_mod_ctx_mgmt_check(char *type, void *ctx TSRMLS_DC);
+extern int sms_mod_ctx_mgmt_rem(char *type, void *ctx TSRMLS_DC);
 
 extern int set_log_by_id(database_context_t *ctx, fildelog_like_t *Plog);
 extern int set_sd_alarm(void *log_handle, char *cli_prefix, long seqnum, int alarm_level, char *log_reference, const char *format, ...);
@@ -73,12 +92,14 @@ extern int set_sd_alarm(void *log_handle, char *cli_prefix, long seqnum, int ala
  */
 #define SMS_INIT_TSRM()				\
   THREAD_T thr;					    \
+  void ***tsrm_ls;				    \
+						            \
   thr = pthread_self();				\
-  ts_resource_ex(0, &thr)
+  tsrm_ls = ts_resource_ex(0, &thr)
 
 #define SMS_PHP_STARTUP_THREAD()	\
        SMS_INIT_TSRM();				\
-  php_request_startup()
+  php_request_startup(TSRMLS_C)
 
 /* Called at the end of the thread */
 #define SMS_PHP_SHUTDOWN_THREAD()	\
@@ -86,7 +107,6 @@ extern int set_sd_alarm(void *log_handle, char *cli_prefix, long seqnum, int ala
   zend_try {					    \
     php_request_shutdown(NULL);		\
   } zend_end_try();                 \
-  ts_free_thread();                 \
 }
 
 #endif /* _SMS_PHP_H_ */

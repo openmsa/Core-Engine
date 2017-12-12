@@ -77,7 +77,7 @@ OPENSSL_LDFLAGS=$(SB_ROOT)/common/openssl/$(ARCH)/lib/libssl.a $(SB_ROOT)/common
 
 # PHP Specific
 PHP_CFLAGS=-I$(SB_ROOT)/common/php/$(ARCH)/include/php -I$(SB_ROOT)/common/php/$(ARCH)/include/php/main -I$(SB_ROOT)/common/php/$(ARCH)/include/php/Zend -I$(SB_ROOT)/common/php/$(ARCH)/include/php/TSRM
-PHP_LDFLAGS=$(SB_ROOT)/common/php/$(ARCH)/lib/libphp7.a -lxml2 -lxslt -lexslt $(CURL_LDFLAGS) $(NET_SNMP_LDFLAGS) $(OPENSSL_LDFLAGS) -lexpect $(ZLIB_LDFLAGS)
+PHP_LDFLAGS=$(SB_ROOT)/common/php/$(ARCH)/lib/libphp5.a -lxml2 -lxslt -lexslt $(CURL_LDFLAGS) $(NET_SNMP_LDFLAGS) $(OPENSSL_LDFLAGS) -lexpect $(ZLIB_LDFLAGS)
 
 # PCRE Specific
 PCRE_CFLAGS = -I$(SB_ROOT)/common/pcre/$(ARCH)/include

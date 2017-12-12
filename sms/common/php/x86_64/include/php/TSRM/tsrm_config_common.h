@@ -42,10 +42,7 @@ char *alloca ();
 #endif
 
 #ifndef MAXPATHLEN
-# if _WIN32
-#  include "win32/ioutil.h"
-#  define MAXPATHLEN PHP_WIN32_IOUTIL_MAXPATHLEN
-# elif PATH_MAX
+# ifdef PATH_MAX
 #  define MAXPATHLEN PATH_MAX
 # elif defined(MAX_PATH)
 #  define MAXPATHLEN MAX_PATH

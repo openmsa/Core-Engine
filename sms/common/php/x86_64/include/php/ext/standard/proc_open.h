@@ -1,8 +1,8 @@
 /*
    +----------------------------------------------------------------------+
-   | PHP Version 7                                                        |
+   | PHP Version 5                                                        |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1997-2017 The PHP Group                                |
+   | Copyright (c) 1997-2016 The PHP Group                                |
    +----------------------------------------------------------------------+
    | This source file is subject to version 3.01 of the PHP license,      |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -25,6 +25,8 @@ typedef int php_file_descriptor_t;
 typedef pid_t php_process_id_t;
 #endif
 
+#define PHP_PROC_OPEN_MAX_DESCRIPTORS	16
+
 /* Environment block under win32 is a NUL terminated sequence of NUL terminated
  * name=value strings.
  * Under unix, it is an argv style array.
@@ -42,7 +44,7 @@ struct php_process_handle {
 	HANDLE childHandle;
 #endif
 	int npipes;
-	zend_resource **pipes;
+	long pipes[PHP_PROC_OPEN_MAX_DESCRIPTORS];
 	char *command;
 	int is_persistent;
 	php_process_env_t env;

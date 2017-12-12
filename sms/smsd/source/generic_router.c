@@ -41,10 +41,10 @@ int genericStaging(client_state_t *csp, sd_info_t *SDinfo)
   int ret;
   SMS_PHP_STARTUP_THREAD();
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_staging.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_staging.php" TSRMLS_CC);
   if (ret)
   {
     LogWriteExt(LOG_ERROR, SDinfo->sdid, EVT_STAGING, " Script Failed\n");
@@ -63,10 +63,10 @@ int genericStagingMap(client_state_t *csp, sd_info_t *SDinfo)
   int ret;
   SMS_PHP_STARTUP_THREAD();
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_stagingmap.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_stagingmap.php" TSRMLS_CC);
   if (ret)
   {
     LogWriteExt(LOG_ERROR, SDinfo->sdid, EVT_STAGING, " Script Failed\n");
@@ -85,14 +85,14 @@ int genericInitialProvisioning(client_state_t *csp, sd_info_t *SDinfo, char *ipa
   int ret;
   SMS_PHP_STARTUP_THREAD();
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  sms_mod_php_set_global_str("ipaddr", ipaddr);
-  sms_mod_php_set_global_str("login", login);
-  sms_mod_php_set_global_str("passwd", passwd);
-  sms_mod_php_set_global_str("adminpasswd", adminpasswd);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  sms_mod_php_set_global_str("ipaddr", ipaddr TSRMLS_CC);
+  sms_mod_php_set_global_str("login", login TSRMLS_CC);
+  sms_mod_php_set_global_str("passwd", passwd TSRMLS_CC);
+  sms_mod_php_set_global_str("adminpasswd", adminpasswd TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_provisioning.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_provisioning.php" TSRMLS_CC);
   if (ret)
   {
     LogWriteExt(LOG_ERROR, SDinfo->sdid, EVT_PROVISIONING, " Script Failed\n");
@@ -112,10 +112,10 @@ int genericCheckProvisioning(client_state_t *csp, sd_info_t *SDinfo)
   int ret;
   SMS_PHP_STARTUP_THREAD();
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_checkprovisioning.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_checkprovisioning.php" TSRMLS_CC);
   if (ret)
   {
     LogWriteExt(LOG_ERROR, SDinfo->sdid, EVT_CHECKPROVISIONING, " Script Failed\n");
@@ -142,14 +142,14 @@ int genericSnmpTest(client_state_t *csp, char *cmd, char *address, char *communi
     goto end;
   }
 
-  sms_mod_php_set_global_str("snmp_cmd", cmd);
-  sms_mod_php_set_global_str("ip_address", address);
-  sms_mod_php_set_global_str("snmp_community", community);
-  sms_mod_php_set_global_str("oid", oid);
-  sms_mod_php_set_global_str("sdid", "");
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
+  sms_mod_php_set_global_str("snmp_cmd", cmd TSRMLS_CC);
+  sms_mod_php_set_global_str("ip_address", address TSRMLS_CC);
+  sms_mod_php_set_global_str("snmp_community", community TSRMLS_CC);
+  sms_mod_php_set_global_str("oid", oid TSRMLS_CC);
+  sms_mod_php_set_global_str("sdid", "" TSRMLS_CC);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script("", "mon_generic", "snmp_test.php");
+  ret = sms_mod_php_execute_script("", "mon_generic", "snmp_test.php" TSRMLS_CC);
   if (ret)
   {
     LogWriteExt(LOG_ERROR, "", event, " Script Failed\n");
@@ -169,15 +169,15 @@ int genericGetConfiguration(sd_info_t *SDinfo, char **config, char **running_con
   char *str;
   SMS_PHP_STARTUP_THREAD();
 
-  php_store_sdinfo(SDinfo);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_get_sd_conf.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_get_sd_conf.php" TSRMLS_CC);
   if (ret)
   {
     LogWriteExt(LOG_ERROR, SDinfo->sdid, EVT_GETSDCONF, " Script Failed\n");
     goto end;
   }
-  str = sms_mod_php_get_global_str(PHP_GLOBAL_SMS_RETURN_BUF);
+  str = sms_mod_php_get_global_str(PHP_GLOBAL_SMS_RETURN_BUF TSRMLS_CC);
   if (!str)
   {
     str = "";
@@ -195,10 +195,10 @@ int genericGetRunningConf(client_state_t *csp, sd_info_t *SDinfo)
   int ret;
   SMS_PHP_STARTUP_THREAD();
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_get_running_conf.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_get_running_conf.php" TSRMLS_CC);
   if (ret)
   {
     LogWriteExt(LOG_ERROR, SDinfo->sdid, EVT_GETRUNNINGCONF, " Script Failed\n");
@@ -217,10 +217,10 @@ int genericGetConfig(client_state_t *csp, sd_info_t *SDinfo)
   int ret;
   SMS_PHP_STARTUP_THREAD();
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_get_config.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_get_config.php" TSRMLS_CC);
   if (ret)
   {
     LogWriteExt(LOG_ERROR, SDinfo->sdid, EVT_GETCONFIG, " Script Failed\n");
@@ -239,10 +239,10 @@ int genericGetActivityReport(client_state_t *csp, sd_info_t *SDinfo)
   int ret;
   SMS_PHP_STARTUP_THREAD();
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_get_activity_report.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_get_activity_report.php" TSRMLS_CC);
   if (ret)
   {
     LogWriteExt(LOG_ERROR, SDinfo->sdid, EVT_GETACTIVITYREPORT, " Script Failed\n");
@@ -261,10 +261,10 @@ int genericGetBotnetReport(client_state_t *csp, sd_info_t *SDinfo)
   int ret;
   SMS_PHP_STARTUP_THREAD();
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_get_botnet_report.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_get_botnet_report.php" TSRMLS_CC);
   if (ret)
   {
     LogWriteExt(LOG_ERROR, SDinfo->sdid, EVT_GETBOTNETREPORT, " Script Failed\n");
@@ -286,13 +286,13 @@ int genericRestoreConf(client_state_t *csp, sd_info_t *SDinfo, char *revision_id
 
   config_type = get_router_config_type(SDinfo->SD.man_id, SDinfo->SD.mod_id);
 
-  sms_mod_php_set_global_str(PHP_GLOBAL_SMS_REVISION_ID, revision_id);
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  sms_mod_php_set_global_str("config_type", config_type);
-  sms_mod_php_set_global_str("sms_msg", msg);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_str(PHP_GLOBAL_SMS_REVISION_ID, revision_id TSRMLS_CC);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  sms_mod_php_set_global_str("config_type", config_type TSRMLS_CC);
+  sms_mod_php_set_global_str("sms_msg", msg TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_restore_conf.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_restore_conf.php" TSRMLS_CC);
   if (ret)
   {
     LogWriteExt(LOG_ERROR, SDinfo->sdid, EVT_RESTORECONF, " Script Failed\n");
@@ -315,13 +315,13 @@ int genericBackupConf(client_state_t *csp, sd_info_t *SDinfo, char *backup_modul
 
   config_type = get_router_config_type(SDinfo->SD.man_id, SDinfo->SD.mod_id);
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  sms_mod_php_set_global_str("backup_module", backup_module);
-  sms_mod_php_set_global_str("config_type", config_type);
-  sms_mod_php_set_global_str("sms_msg", msg);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  sms_mod_php_set_global_str("backup_module", backup_module TSRMLS_CC);
+  sms_mod_php_set_global_str("config_type", config_type TSRMLS_CC);
+  sms_mod_php_set_global_str("sms_msg", msg TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_backup_conf.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_backup_conf.php" TSRMLS_CC);
   if (ret)
   {
     LogWriteExt(LOG_ERROR, SDinfo->sdid, EVT_BACKUPCONF, " Script Failed\n");
@@ -346,15 +346,15 @@ int genericPushConfig(client_state_t *csp, sd_info_t *SDinfo,char *addon, char *
 
   config_type = get_router_config_type(SDinfo->SD.man_id, SDinfo->SD.mod_id);
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  sms_mod_php_set_global_str("addon", addon);
-  sms_mod_php_set_global_str("ts_ip", ts_ip);
-  sms_mod_php_set_global_str("ts_port", ts_port);
-  sms_mod_php_set_global_str("configuration", configuration);
-  sms_mod_php_set_global_str("config_type", config_type);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  sms_mod_php_set_global_str("addon", addon TSRMLS_CC);
+  sms_mod_php_set_global_str("ts_ip", ts_ip TSRMLS_CC);
+  sms_mod_php_set_global_str("ts_port", ts_port TSRMLS_CC);
+  sms_mod_php_set_global_str("configuration", configuration TSRMLS_CC);
+  sms_mod_php_set_global_str("config_type", config_type TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, "smsd", "do_push_config.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, "smsd", "do_push_config.php" TSRMLS_CC);
   if (ret)
   {
     GLogERROR(log_handle, " Script Failed\n");
@@ -373,10 +373,10 @@ int genericUpdateConf(client_state_t *csp, sd_info_t *SDinfo)
   int ret;
   SMS_PHP_STARTUP_THREAD();
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_update_conf.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_update_conf.php" TSRMLS_CC);
   if (ret)
   {
     LogWriteExt(LOG_ERROR, SDinfo->sdid, EVT_UPDATECONF, " Script Failed\n");
@@ -415,11 +415,11 @@ int genericSmsexecCmd(client_state_t *csp, sd_info_t *SDinfo, struct router_cmd_
     router_cmd_elt = GPUL_TAILQ_NEXT(router_cmd_elt, link);
   }
 
-  sms_mod_php_set_global_str("smsexec_list", csv);
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_str("smsexec_list", csv TSRMLS_CC);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_smsexec.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_smsexec.php" TSRMLS_CC);
   if (ret)
   {
     LogWriteExt(LOG_ERROR, SDinfo->sdid, EVT_SMSEXEC, " Script Failed\n");
@@ -459,12 +459,12 @@ int genericSmsAddonExecCmd(client_state_t *csp, sd_info_t *SDinfo, char *addon, 
     router_cmd_elt = GPUL_TAILQ_NEXT(router_cmd_elt, link);
   }
 
-  sms_mod_php_set_global_str("addon", addon);
-  sms_mod_php_set_global_str("smsexec_list", csv);
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_str("addon", addon TSRMLS_CC);
+  sms_mod_php_set_global_str("smsexec_list", csv TSRMLS_CC);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_sms_addon_exec.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_sms_addon_exec.php" TSRMLS_CC);
   if (ret)
   {
     LogWriteExt(LOG_ERROR, SDinfo->sdid, EVT_SMSEXEC, " Script Failed\n");
@@ -488,12 +488,12 @@ int genericUnarchiveConfiguration(client_state_t *csp, sd_info_t *SDinfo, char *
 
   log_handle = gpul_sched_get_my_log_handle(sched_handle);
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  sms_mod_php_set_global_str("archive", archive);
-  sms_mod_php_set_global_str("folder", folder);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  sms_mod_php_set_global_str("archive", archive TSRMLS_CC);
+  sms_mod_php_set_global_str("folder", folder TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_unarchive_conf.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_unarchive_conf.php" TSRMLS_CC);
   if (ret)
   {
     GLogERROR(log_handle, "Script Failed");
@@ -514,11 +514,11 @@ int genericGetArchiveConfiguration(client_state_t *csp, sd_info_t *SDinfo, char 
 
   log_handle = gpul_sched_get_my_log_handle(sched_handle);
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  sms_mod_php_set_global_str("folder", folder);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  sms_mod_php_set_global_str("folder", folder TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_get_archive_conf.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_get_archive_conf.php" TSRMLS_CC);
   if (ret)
   {
     GLogERROR(log_handle, "Script Failed");
@@ -539,10 +539,10 @@ int genericUpdateLicense(client_state_t *csp, sd_info_t * SDinfo)
 
   log_handle = gpul_sched_get_my_log_handle(sched_handle);
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_update_license.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_update_license.php" TSRMLS_CC);
   if (ret)
   {
     GLogERROR(log_handle, "Script Failed");
@@ -563,12 +563,12 @@ int genericUpdateFirmware(client_state_t *csp, sd_info_t * SDinfo, char *param, 
 
   log_handle = gpul_sched_get_my_log_handle(sched_handle);
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  sms_mod_php_set_global_str("param1", param);
-  sms_mod_php_set_global_str("param2", server_addr);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  sms_mod_php_set_global_str("param1", param TSRMLS_CC);
+  sms_mod_php_set_global_str("param2", server_addr TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_update_firmware.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_update_firmware.php" TSRMLS_CC);
   if (ret)
   {
     GLogERROR(log_handle, "Script Failed");
@@ -586,13 +586,13 @@ int genericExecScript(client_state_t *csp, sd_info_t *SDinfo, char *script, int 
   int ret;
   SMS_PHP_STARTUP_THREAD();
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  sms_mod_php_set_global_str("exec_script_name", script);
-  sms_mod_php_set_global_bool("synchronous", synchronous);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  sms_mod_php_set_global_str("exec_script_name", script TSRMLS_CC);
+  sms_mod_php_set_global_bool("synchronous", synchronous TSRMLS_CC);
 
-  php_store_sdinfo(SDinfo);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_exec_script.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_exec_script.php" TSRMLS_CC);
   if (ret)
   {
     LogWriteExt(LOG_ERROR, SDinfo->sdid, EVT_UPDATECONF, " Script Failed\n");
@@ -616,17 +616,17 @@ int genericGetReport(sd_info_t * SDinfo, char **reportBuffer, int fullReport, in
   SMS_PHP_STARTUP_THREAD();
 
 
-  sms_mod_php_set_global_bool("fullReport", fullReport);
+  sms_mod_php_set_global_bool("fullReport", fullReport TSRMLS_CC);
 
-  php_store_sdinfo(SDinfo);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_get_report.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_get_report.php" TSRMLS_CC);
   if (ret)
   {
     LogWriteExt(LOG_ERROR, SDinfo->sdid, EVT_GETREPORT, " Script Failed\n");
     goto end;
   }
-  str = sms_mod_php_get_global_str(PHP_GLOBAL_SMS_RETURN_BUF);
+  str = sms_mod_php_get_global_str(PHP_GLOBAL_SMS_RETURN_BUF TSRMLS_CC);
   if (!str)
   {
     str = "";
@@ -647,10 +647,10 @@ int genericHaSwap(client_state_t *csp, sd_info_t *SDinfo)
 
   log_handle = gpul_sched_get_my_log_handle(sched_handle);
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_ha_swap.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_ha_swap.php" TSRMLS_CC);
   if (ret)
   {
     GLogERROR(log_handle, " Script Failed");
@@ -678,10 +678,10 @@ int genericCheckSerialNumber(sd_info_t *SDinfo, char *ipaddr)
     goto end;
   }
 
-  php_store_sdinfo(SDinfo);
-  sms_mod_php_set_global_str("ipaddr", ipaddr);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
+  sms_mod_php_set_global_str("ipaddr", ipaddr TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_check_serial_number.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_check_serial_number.php" TSRMLS_CC);
   if (ret)
   {
     GLogERROR(log_handle, " Script Failed");
@@ -701,21 +701,21 @@ int genericCallCommand(client_state_t *csp, sd_info_t *SDinfo, char *command, in
   SMS_PHP_STARTUP_THREAD();
 
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  php_store_sdinfo(SDinfo);
-  sms_mod_php_set_global_str("commandName", command);
-  sms_mod_php_set_global_str("commandParams", params);
-  sms_mod_php_set_global_long("apply_conf", apply_conf);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
+  sms_mod_php_set_global_str("commandName", command TSRMLS_CC);
+  sms_mod_php_set_global_str("commandParams", params TSRMLS_CC);
+  sms_mod_php_set_global_long("apply_conf", apply_conf TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, "smsd", "do_call_command.php");
-  str = sms_mod_php_get_global_str(PHP_GLOBAL_SMS_RETURN_BUF);
+  ret = sms_mod_php_execute_script(SDinfo->sdid, "smsd", "do_call_command.php" TSRMLS_CC);
+  str = sms_mod_php_get_global_str(PHP_GLOBAL_SMS_RETURN_BUF TSRMLS_CC);
   if (!str)
   {
     str = "";
   }
   *result = strdup(str);
 
-  str = sms_mod_php_get_global_str(PHP_GLOBAL_SMS_OUTPUT_BUF);
+  str = sms_mod_php_get_global_str(PHP_GLOBAL_SMS_OUTPUT_BUF TSRMLS_CC);
   if (!str)
   {
     str = "";
@@ -736,14 +736,14 @@ int genericSendDataFiles(client_state_t *csp, sd_info_t *SDinfo, char *addon, ch
 
   log_handle = gpul_sched_get_my_log_handle(sched_handle);
 
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  sms_mod_php_set_global_str("param1", addon);
-  sms_mod_php_set_global_str("param2", server_addr);
-  sms_mod_php_set_global_str("param3", server_ftp_login);
-  sms_mod_php_set_global_str("param4", server_ftp_passwd);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  sms_mod_php_set_global_str("param1", addon TSRMLS_CC);
+  sms_mod_php_set_global_str("param2", server_addr TSRMLS_CC);
+  sms_mod_php_set_global_str("param3", server_ftp_login TSRMLS_CC);
+  sms_mod_php_set_global_str("param4", server_ftp_passwd TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_send_data_files.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_send_data_files.php" TSRMLS_CC);
   if (ret)
   {
     GLogERROR(log_handle, " Script Failed");
@@ -771,12 +771,12 @@ int generic_sms_cmd(client_state_t *csp, sd_info_t *SDinfo, char *cmd, char *opt
   {
     *p = tolower(*p);
   }
-  sms_mod_php_set_global_str("cmd", cmd);
-  sms_mod_php_set_global_str("optional_params", optional_params);
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_str("cmd", cmd TSRMLS_CC);
+  sms_mod_php_set_global_str("optional_params", optional_params TSRMLS_CC);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, buf);
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, buf TSRMLS_CC);
   if (ret)
   {
     GLogERROR(log_handle, " Script Failed");
@@ -806,11 +806,11 @@ int generic_smsd_cmd(client_state_t *csp, char *cmd, char *optional_params)
   {
     *p = tolower(*p);
   }
-  sms_mod_php_set_global_str("cmd", cmd);
-  sms_mod_php_set_global_str("optional_params", optional_params);
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
+  sms_mod_php_set_global_str("cmd", cmd TSRMLS_CC);
+  sms_mod_php_set_global_str("optional_params", optional_params TSRMLS_CC);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script("debug", "smsd", buf);
+  ret = sms_mod_php_execute_script("debug", "smsd", buf TSRMLS_CC);
   if (ret)
   {
     GLogERROR(log_handle, " Script Failed");
@@ -839,12 +839,12 @@ int generic_sms_cust_cmd(client_state_t *csp, cust_info_t *cust_info, char *cmd,
   {
     *p = tolower(*p);
   }
-  sms_mod_php_set_global_str("cmd", cmd);
-  sms_mod_php_set_global_str("optional_params", optional_params);
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  php_store_cust_info(cust_info);
+  sms_mod_php_set_global_str("cmd", cmd TSRMLS_CC);
+  sms_mod_php_set_global_str("optional_params", optional_params TSRMLS_CC);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  php_store_cust_info(cust_info TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(cust_info->custid, "smsd", buf);
+  ret = sms_mod_php_execute_script(cust_info->custid, "smsd", buf TSRMLS_CC);
   if (ret)
   {
     GLogERROR(log_handle, " Script Failed");
@@ -866,13 +866,13 @@ int generic_gen_template(client_state_t *csp, sd_info_t *SDinfo, char *revision1
 
   log_handle = gpul_sched_get_my_log_handle(sched_handle);
 
-  sms_mod_php_set_global_str("revision1", revision1);
-  sms_mod_php_set_global_str("revision2", revision2);
-  sms_mod_php_set_global_str("addon", addon);
-  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp);
-  php_store_sdinfo(SDinfo);
+  sms_mod_php_set_global_str("revision1", revision1 TSRMLS_CC);
+  sms_mod_php_set_global_str("revision2", revision2 TSRMLS_CC);
+  sms_mod_php_set_global_str("addon", addon TSRMLS_CC);
+  sms_mod_php_set_global_ptr(PHP_GLOBAL_SMS_CSP, csp TSRMLS_CC);
+  php_store_sdinfo(SDinfo TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_gen_template.php");
+  ret = sms_mod_php_execute_script(SDinfo->sdid, SDinfo->router_path, "do_gen_template.php" TSRMLS_CC);
   if (ret)
   {
     GLogERROR(log_handle, "Script Failed");

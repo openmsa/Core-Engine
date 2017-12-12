@@ -2,7 +2,7 @@
    +----------------------------------------------------------------------+
    | PHP Version 5                                                        |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1997-2013 The PHP Group                                |
+   | Copyright (c) 1997-2016 The PHP Group                                |
    +----------------------------------------------------------------------+
    | This source file is subject to version 3.01 of the PHP license,      |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -57,12 +57,16 @@
 		newlen = (n);												\
 		(d)->a = newlen < SMART_STR_START_SIZE 						\
 				? SMART_STR_START_SIZE 								\
-				: newlen + SMART_STR_PREALLOC;						\
+				: (newlen >= (INT_MAX - SMART_STR_PREALLOC)? newlen \
+							: (newlen + SMART_STR_PREALLOC));		\
 		SMART_STR_DO_REALLOC(d, what);								\
 	} else {														\
 		newlen = (d)->len + (n);									\
 		if (newlen >= (d)->a) {										\
 			(d)->a = newlen + SMART_STR_PREALLOC;					\
+	        if (UNEXPECTED((d)->a >= INT_MAX)) {					\
+                zend_error(E_ERROR, "String size overflow");		\
+            }														\
 			SMART_STR_DO_REALLOC(d, what);							\
 		}															\
 	}																\
@@ -148,17 +152,17 @@
  * for GCC compatible compilers, e.g.
  *
  * #define f(..) ({char *r;..;__r;})
- */  
- 
+ */
+
 static inline char *smart_str_print_long(char *buf, long num) {
-	char *r; 
-	smart_str_print_long4(buf, num, unsigned long, r); 
+	char *r;
+	smart_str_print_long4(buf, num, unsigned long, r);
 	return r;
 }
 
 static inline char *smart_str_print_unsigned(char *buf, long num) {
-	char *r; 
-	smart_str_print_unsigned4(buf, num, unsigned long, r); 
+	char *r;
+	smart_str_print_unsigned4(buf, num, unsigned long, r);
 	return r;
 }
 
@@ -168,7 +172,7 @@ static inline char *smart_str_print_unsigned(char *buf, long num) {
    	smart_str_print##func##4 (__b + sizeof(__b) - 1, (num), vartype, __t);	\
 	smart_str_appendl_ex((dest), __t, __b + sizeof(__b) - 1 - __t, (type));	\
 } while (0)
-	
+
 #define smart_str_append_unsigned_ex(dest, num, type) \
 	smart_str_append_generic_ex((dest), (num), (type), unsigned long, _unsigned)
 

@@ -144,7 +144,7 @@ zend_module_entry sms_php_module_entry =
 
 
 /* register config variables in _SERVER superglobal */
-void sms_sapi_php_register_variables(zval *track_vars_array)
+void sms_sapi_php_register_variables(zval *track_vars_array TSRMLS_DC)
 {
   char buf[64];
   pthread_t thread_id = pthread_self();
@@ -157,35 +157,35 @@ void sms_sapi_php_register_variables(zval *track_vars_array)
    */
 
   /*! @var $_SERVER['DOMAIN']   MSA Domain name */
-  php_register_variable("DOMAIN", currentConfig->domain, track_vars_array);
-  php_register_variable("IP_SMS_SYSLOG", currentConfig->syslogArray[syslog_master].syslog_add_ip, track_vars_array);
-  php_register_variable("SMS_NETWORK_IP", currentConfig->smsArray[sms_master].sms_network_ip, track_vars_array);
-  php_register_variable("SMS_MASK_IP", currentConfig->smsArray[sms_master].sms_mask_ip, track_vars_array);
-  php_register_variable("SMS_NETWORK_IP_DISASTER", currentConfig->smsArray[sms_disaster].sms_network_ip, track_vars_array);
-  php_register_variable("SMS_MASK_IP_DISASTER", currentConfig->smsArray[sms_disaster].sms_mask_ip, track_vars_array);
-  php_register_variable("TFTP_BASE", currentConfig->tftp_base, track_vars_array);
-  php_register_variable("SMS_ADDRESS_IP", currentConfig->smsArray[sms_master].sms_address_ip, track_vars_array);
-  php_register_variable("SMS_ADDRESS_IPV6", currentConfig->smsArray[sms_master].sms_address_ipv6, track_vars_array);
-  php_register_variable("NTP_SERVER", currentConfig->ntpserver, track_vars_array);
-  php_register_variable("GENERATED_CONF_BASE", "/opt/sms/spool/routerconfigs", track_vars_array);
-  php_register_variable("DNS_DEFAULT", currentConfig->dns_default, track_vars_array);
-  php_register_variable("UBI_VSOC_NAME", currentConfig->ubi_vsoc_name, track_vars_array);
-  php_register_variable("UBI_CENTRALIZED_NODE_NAME", currentConfig->ubi_centralized_node_name, track_vars_array);
-  php_register_variable("NOTIF_MAIL_ADDRESS", currentConfig->notif_mail_address, track_vars_array);
-  php_register_variable("NTP_BACKUP_SERVER", currentConfig->ntpbackupserver, track_vars_array);
-  php_register_variable("FMC_REPOSITORY", currentConfig->fmc_repository, track_vars_array);
-  php_register_variable("FMC_ENTITIES2FILES", currentConfig->fmc_entities2files, track_vars_array);
-  php_register_variable("SCP_USERNAME", currentConfig->scp_user, track_vars_array);
-  php_register_variable("SCP_PASSWORD", currentConfig->scp_pass, track_vars_array);
+  php_register_variable("DOMAIN", currentConfig->domain, track_vars_array TSRMLS_CC);
+  php_register_variable("IP_SMS_SYSLOG", currentConfig->syslogArray[syslog_master].syslog_add_ip, track_vars_array TSRMLS_CC);
+  php_register_variable("SMS_NETWORK_IP", currentConfig->smsArray[sms_master].sms_network_ip, track_vars_array TSRMLS_CC);
+  php_register_variable("SMS_MASK_IP", currentConfig->smsArray[sms_master].sms_mask_ip, track_vars_array TSRMLS_CC);
+  php_register_variable("SMS_NETWORK_IP_DISASTER", currentConfig->smsArray[sms_disaster].sms_network_ip, track_vars_array TSRMLS_CC);
+  php_register_variable("SMS_MASK_IP_DISASTER", currentConfig->smsArray[sms_disaster].sms_mask_ip, track_vars_array TSRMLS_CC);
+  php_register_variable("TFTP_BASE", currentConfig->tftp_base, track_vars_array TSRMLS_CC);
+  php_register_variable("SMS_ADDRESS_IP", currentConfig->smsArray[sms_master].sms_address_ip, track_vars_array TSRMLS_CC);
+  php_register_variable("SMS_ADDRESS_IPV6", currentConfig->smsArray[sms_master].sms_address_ipv6, track_vars_array TSRMLS_CC);
+  php_register_variable("NTP_SERVER", currentConfig->ntpserver, track_vars_array TSRMLS_CC);
+  php_register_variable("GENERATED_CONF_BASE", "/opt/sms/spool/routerconfigs", track_vars_array TSRMLS_CC);
+  php_register_variable("DNS_DEFAULT", currentConfig->dns_default, track_vars_array TSRMLS_CC);
+  php_register_variable("UBI_VSOC_NAME", currentConfig->ubi_vsoc_name, track_vars_array TSRMLS_CC);
+  php_register_variable("UBI_CENTRALIZED_NODE_NAME", currentConfig->ubi_centralized_node_name, track_vars_array TSRMLS_CC);
+  php_register_variable("NOTIF_MAIL_ADDRESS", currentConfig->notif_mail_address, track_vars_array TSRMLS_CC);
+  php_register_variable("NTP_BACKUP_SERVER", currentConfig->ntpbackupserver, track_vars_array TSRMLS_CC);
+  php_register_variable("FMC_REPOSITORY", currentConfig->fmc_repository, track_vars_array TSRMLS_CC);
+  php_register_variable("FMC_ENTITIES2FILES", currentConfig->fmc_entities2files, track_vars_array TSRMLS_CC);
+  php_register_variable("SCP_USERNAME", currentConfig->scp_user, track_vars_array TSRMLS_CC);
+  php_register_variable("SCP_PASSWORD", currentConfig->scp_pass, track_vars_array TSRMLS_CC);
 
   sprintf(buf, "%d", currentConfig->local_server_synchro_timeout);
-  php_register_variable("LOCAL_SERVER_SYNCHRO_TIMEOUT", buf, track_vars_array);
-  php_register_variable("NODE_NAME", currentConfig->node_name, track_vars_array);
+  php_register_variable("LOCAL_SERVER_SYNCHRO_TIMEOUT", buf, track_vars_array TSRMLS_CC);
+  php_register_variable("NODE_NAME", currentConfig->node_name, track_vars_array TSRMLS_CC);
 
   snprintf(buf, 16, "%lu", thread_id);
-  php_register_variable("THREAD_ID", buf, track_vars_array);
+  php_register_variable("THREAD_ID", buf, track_vars_array TSRMLS_CC);
   snprintf(buf, 16, "%d", currentConfig->debug);
-  php_register_variable("DEBUG_LEVEL", buf, track_vars_array);
+  php_register_variable("DEBUG_LEVEL", buf, track_vars_array TSRMLS_CC);
 
   /**
    * @}
