@@ -1,8 +1,8 @@
 /*
   +----------------------------------------------------------------------+
-  | PHP Version 7                                                        |
+  | PHP Version 5                                                        |
   +----------------------------------------------------------------------+
-  | Copyright (c) 1997-2017 The PHP Group                                |
+  | Copyright (c) 1997-2016 The PHP Group                                |
   +----------------------------------------------------------------------+
   | This source file is subject to version 3.01 of the PHP license,      |
   | that is bundled with this package in the file LICENSE, and is        |
@@ -27,15 +27,11 @@ PHP_MSHUTDOWN_FUNCTION(url_scanner_ex);
 PHP_RINIT_FUNCTION(url_scanner_ex);
 PHP_RSHUTDOWN_FUNCTION(url_scanner_ex);
 
-PHPAPI char *php_url_scanner_adapt_single_url(const char *url, size_t urllen, const char *name, const char *value, size_t *newlen, int encode);
-PHPAPI int php_url_scanner_add_session_var(char *name, size_t name_len, char *value, size_t value_len, int encode);
-PHPAPI int php_url_scanner_reset_session_var(zend_string *name, int encode);
-PHPAPI int php_url_scanner_reset_session_vars(void);
-PHPAPI int php_url_scanner_add_var(char *name, size_t name_len, char *value, size_t value_len, int encode);
-PHPAPI int php_url_scanner_reset_var(zend_string *name, int encode);
-PHPAPI int php_url_scanner_reset_vars(void);
+PHPAPI char *php_url_scanner_adapt_single_url(const char *url, size_t urllen, const char *name, const char *value, size_t *newlen TSRMLS_DC);
+PHPAPI int php_url_scanner_add_var(char *name, int name_len, char *value, int value_len, int urlencode TSRMLS_DC);
+PHPAPI int php_url_scanner_reset_vars(TSRMLS_D);
 
-#include "zend_smart_str_public.h"
+#include "php_smart_str_public.h"
 
 typedef struct {
 	/* Used by the mainloop of the scanner */
@@ -54,12 +50,7 @@ typedef struct {
 
 	char *lookup_data;
 	int state;
-
-	int type;
-	smart_str attr_val;
-	int tag_type;
-	int attr_type;
-
+	
 	/* Everything above is zeroed in RINIT */
 	HashTable *tags;
 } url_adapt_state_ex_t;

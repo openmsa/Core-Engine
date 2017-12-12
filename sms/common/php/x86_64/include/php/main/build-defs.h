@@ -1,8 +1,8 @@
 /*                                                                -*- C -*-
    +----------------------------------------------------------------------+
-   | PHP Version 7                                                        |
+   | PHP Version 5                                                        |
    +----------------------------------------------------------------------+
-   | Copyright (c) 1997-2017 The PHP Group                                |
+   | Copyright (c) 1997-2016 The PHP Group                                |
    +----------------------------------------------------------------------+
    | This source file is subject to version 3.01 of the PHP license,      |
    | that is bundled with this package in the file LICENSE, and is        |
@@ -18,7 +18,7 @@
 
 /* $Id$ */
 
-#define CONFIGURE_COMMAND " './configure'  '--prefix=/home/ydu/workspace/sms_16.2.2/common/php/x86_64' '--enable-debug' '--enable-maintainer-zts' '--enable-embed=static' '--enable-sigchild' '--enable-cli' '--enable-soap' '--enable-pty' '--enable-sockets' '--without-pdo_sqlite' '--without-mysql' '--without-sqlite3' '--without-sqlite' '--without-pear' '--disable-phar' '--disable-cgi' '--enable-libxml' '--with-curl=/home/ydu/workspace/sms_16.2.2/common/curl/x86_64' '--with-openssl=/home/ydu/workspace/sms_16.2.2/common/openssl/x86_64' '--with-openssl-dir=/home/ydu/workspace/sms_16.2.2/common/openssl/x86_64' '--with-zlib=/home/ydu/workspace/sms_16.2.2/common/zlib/x86_64' '--with-zlib-dir=/home/ydu/workspace/sms_16.2.2/common/zlib/x86_64' '--enable-ucd-snmp-hack' '--with-snmp=/home/ydu/workspace/sms_16.2.2/common/net-snmp/x86_64' '--with-xsl'"
+#define CONFIGURE_COMMAND " './configure'  '--prefix=/home/ydu/workspace/sms_16.2.2/common/php/x86_64' '--enable-debug' '--enable-maintainer-zts' '--enable-embed=static' '--enable-sigchild' '--enable-cli' '--enable-soap' '--enable-pty' '--enable-sockets' '--without-pdo_sqlite' '--without-mysql' '--without-sqlite3' '--without-sqlite' '--without-pear' '--disable-phar' '--disable-cgi' '--enable-libxml' '--with-curl=/home/ydu/workspace/sms_16.2.2/common/curl/x86_64' '--with-openssl=/home/ydu/workspace/sms_16.2.2/common/openssl/x86_64' '--with-openssl-dir=/home/ydu/workspace/sms_16.2.2/common/openssl/x86_64' '--with-zlib=/home/ydu/workspace/sms_16.2.2/common/zlib/x86_64' '--with-zlib-dir=/home/ydu/workspace/sms_16.2.2/common/zlib/x86_64' '--enable-ucd-snmp-hack' '--with-snmp=/home/ydu/workspace/sms_16.2.2/common/net-snmp/x86_64' '--with-xsl' '--with-odbcver=0'"
 #define PHP_ADA_INCLUDE		""
 #define PHP_ADA_LFLAGS		""
 #define PHP_ADA_LIBS		""
@@ -37,16 +37,16 @@
 #define PHP_IFX_INCLUDE		""
 #define PHP_IFX_LFLAGS		""
 #define PHP_IFX_LIBS		""
-#define PHP_INSTALL_IT		"$(mkinstalldirs) $(INSTALL_ROOT)$(prefix)/lib; $(INSTALL) -m 0644 libs/libphp7.a $(INSTALL_ROOT)$(prefix)/lib"
+#define PHP_INSTALL_IT		"$(mkinstalldirs) $(INSTALL_ROOT)$(prefix)/lib; $(INSTALL) -m 0644 libs/libphp5.a $(INSTALL_ROOT)$(prefix)/lib"
 #define PHP_IODBC_INCLUDE	""
 #define PHP_IODBC_LFLAGS	""
 #define PHP_IODBC_LIBS		""
 #define PHP_MSQL_INCLUDE	""
 #define PHP_MSQL_LFLAGS		""
 #define PHP_MSQL_LIBS		""
-#define PHP_MYSQL_INCLUDE	"@MYSQL_INCLUDE@"
-#define PHP_MYSQL_LIBS		"@MYSQL_LIBS@"
-#define PHP_MYSQL_TYPE		"@MYSQL_MODULE_TYPE@"
+#define PHP_MYSQL_INCLUDE	""
+#define PHP_MYSQL_LIBS		""
+#define PHP_MYSQL_TYPE		""
 #define PHP_ODBC_INCLUDE	""
 #define PHP_ODBC_LFLAGS		""
 #define PHP_ODBC_LIBS		""
@@ -77,7 +77,7 @@
 #define PHP_BIRDSTEP_LIBS        ""
 #define PEAR_INSTALLDIR         ""
 #define PHP_INCLUDE_PATH	".:"
-#define PHP_EXTENSION_DIR       "/home/ydu/workspace/sms_16.2.2/common/php/x86_64/lib/php/extensions/debug-zts-20160303"
+#define PHP_EXTENSION_DIR       "/home/ydu/workspace/sms_16.2.2/common/php/x86_64/lib/php/extensions/debug-zts-20131226"
 #define PHP_PREFIX              "/home/ydu/workspace/sms_16.2.2/common/php/x86_64"
 #define PHP_BINDIR              "/home/ydu/workspace/sms_16.2.2/common/php/x86_64/bin"
 #define PHP_SBINDIR             "/home/ydu/workspace/sms_16.2.2/common/php/x86_64/sbin"
