@@ -6,9 +6,8 @@
 # 
 #################################################################
 
-#SUBDIRS = test
 
-INCLUDES = smsrouter net log smsbd rad gpul smsphp smserror smssnmp
+INCLUDES = smsrouter net log smsbd gpul smsphp smserror smssnmp
 
 LIBS = net log smsbd smsrouter gpul smsphp smserror smssnmp
 
