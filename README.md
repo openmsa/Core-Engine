@@ -6,7 +6,12 @@ Overview
 --------
 
 The Ubiqube OpenMSA is an all in one network and security management
-system.  This repository contains the OpenMSA core-engine component.
+system.  This repository contains the OpenMSA Core Engine component.
+
+The OpenMSA Core Engine is a daemon that pushes configuration to devices
+using Devices Adaptors.  In addition, the daemon handles firmware updates
+and configuration archiving for network elements.  VNF management is also
+supported.
 
 Deploying the core-engine requires an OpenMSA .ova image which must
 be downloaded separately and run in an appropriate VM environment.
