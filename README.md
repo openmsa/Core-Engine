@@ -29,7 +29,8 @@ Installing
 
 - ssh to the OpenMSA as root
 - git clone this repository
-- run: `make && make install`
+- run: `cd sms && make && make install`
+- run: `make restart`
 
 
 Checking it works
