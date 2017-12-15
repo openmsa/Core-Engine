@@ -2171,9 +2171,6 @@
 /* Define to 1 if your C compiler doesn't accept -c and -o together. */
 /* #undef NO_MINUS_C_MINUS_O */
 
-/* The highest supported ODBC version */
-#define ODBCVER 0x0350
-
 /* Define to the address where bug reports for this package should be sent. */
 #define PACKAGE_BUGREPORT ""
 
