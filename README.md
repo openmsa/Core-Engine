@@ -1,5 +1,5 @@
-UBIqube OpenMSA Open Core Engine
-================================
+UBIqube OpenMSA Core Engine
+===========================
 
 
 Overview
@@ -41,4 +41,3 @@ Checking it works
 
 - ssh to the OpenMSA as root
 - run: `tstsms ISALIVE`
-
