@@ -23,6 +23,9 @@ Pre-requisite
 - download the OpenMSA .ova image
 - setup and run the OpenMSA VM
 
+Please refer to the download and install instructions at
+https://github.com/ubiqube/OpenMSA-Freeware
+
 
 Installing
 ----------
