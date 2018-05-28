@@ -24,7 +24,7 @@ Pre-requisite
 - setup and run the OpenMSA VM
 
 Please refer to the download and install instructions at
-https://github.com/ubiqube/OpenMSA-Freeware
+https://openmsa.co/documentation/getting-started-with-the-openmsa-freeware/
 
 
 Installing
