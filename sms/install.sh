@@ -11,3 +11,4 @@ fi
 
 cp -f smsd/object/x86_64/smsd /opt/sms/bin
 chown ncuser: /opt/sms/bin/smsd
+chmod 750 /opt/sms/bin/smsd
