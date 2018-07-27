@@ -215,6 +215,7 @@ int lockProv(client_state_t *csp, char *sd_cli_prefix, long sd_seqnum, char *eve
   int ret2;
   int update_lock_state = 0;
   int provlock;
+  int release_db_ctx = 0;
   void *log_handle;
 
   log_handle = gpul_sched_get_my_log_handle(sched_handle);
@@ -222,18 +223,19 @@ int lockProv(client_state_t *csp, char *sd_cli_prefix, long sd_seqnum, char *eve
   if (csp->db_ctx == NULL)
   {
     csp->db_ctx = sms_db_find_ctx(log_handle, DB_SMS);
+    release_db_ctx = 1;
   }
 
   ret = HA_SMSSQL_GetSDprovlock(&(csp->db_ctx->sql_ctx), sd_cli_prefix, sd_seqnum, &provlock);
   if (ret == ERR_DB_NOTFOUND)
   {
     LogWriteExt2(LOG_ERROR, sd_cli_prefix, sd_seqnum, event, " SD NOT FOUND in the database\n");
-    return ret;
+    goto err;
   }
   else if (ret)
   {
     LogWriteExt2(LOG_ERROR, sd_cli_prefix, sd_seqnum, event, " Cannot READ LOCK PROVISIONING\n");
-    return ret;
+    goto err;
   }
 
   // The SD is set DOWN during the provisioning, polld/syslogd will set it UP
@@ -246,7 +248,7 @@ int lockProv(client_state_t *csp, char *sd_cli_prefix, long sd_seqnum, char *eve
   if (provlock == 1)
   {
     /* Already locked at high level, nothing to do */
-    return ret;
+    goto err;
   }
 
   /* Check the low level lock, we cannot lock at high level if low level is locked. */
@@ -254,23 +256,34 @@ int lockProv(client_state_t *csp, char *sd_cli_prefix, long sd_seqnum, char *eve
   if (ret)
   {
     LogWriteExt2(LOG_ERROR, sd_cli_prefix, sd_seqnum, event, " Cannot LOCK the SD\n");
-    return ret;
+    goto err;
   }
 
   if (update_lock_state == ALREADY_LOCKED)
-    return ERR_SD_LOCK;
+  {
+    ret = ERR_SD_LOCK;
+    goto err;
+  }
 
   /* now we have locked at low level, get the high level lock */
   ret = HA_SMSSQL_SetSDprovlock(&(csp->db_ctx->sql_ctx), sd_cli_prefix, sd_seqnum, 1);
   if (ret)
   {
     LogWriteExt2(LOG_ERROR, sd_cli_prefix, sd_seqnum, event, " Cannot LOCK PROVISIONING SD FAILED with err=%d\n", ret );
+    goto err;
   }
 
   ret2 = HA_SMSSQL_UnLock(&(csp->db_ctx->sql_ctx), sd_cli_prefix, sd_seqnum);
   if (ret2)
   {
     LogWriteExt2(LOG_ERROR, sd_cli_prefix, sd_seqnum, event, " Cannot UNLOCK the SD\n");
+  }
+
+  err:
+
+  if (release_db_ctx)
+  {
+    sms_db_release_ctx(csp->db_ctx);
   }
 
   return ret;
@@ -296,6 +309,7 @@ int unlockProv(client_state_t *csp, char *sd_cli_prefix, long sd_seqnum, char *e
 {
   database_context_t *db_cust;
   int ret;
+  int release_db_ctx = 0;
   void *log_handle;
 
   log_handle = gpul_sched_get_my_log_handle(sched_handle);
@@ -303,6 +317,7 @@ int unlockProv(client_state_t *csp, char *sd_cli_prefix, long sd_seqnum, char *e
   if (csp->db_ctx == NULL)
   {
     csp->db_ctx = sms_db_find_ctx(log_handle, DB_SMS);
+    release_db_ctx = 1;
   }
 
   db_cust = sms_db_find_ctx(log_handle, DB_CUST);
@@ -318,6 +333,12 @@ int unlockProv(client_state_t *csp, char *sd_cli_prefix, long sd_seqnum, char *e
   }
 
   ret = HA_SMSSQL_SetProvDate(&(db_cust->sql_ctx), sd_cli_prefix, sd_seqnum);
+
+  if (release_db_ctx)
+  {
+    sms_db_release_ctx(csp->db_ctx);
+  }
+
   if (ret == ERR_DB_NOTFOUND)
   {
     LogWriteExt2(LOG_ERROR, sd_cli_prefix, sd_seqnum, event, " SD NOT FOUND in the database\n");
@@ -352,6 +373,7 @@ int lockSD(client_state_t *csp, char *sd_cli_prefix, long sd_seqnum, char *event
 {
   int ret;
   int update_lock_state = 0;
+  int release_db_ctx = 0;
   void *log_handle;
 
   log_handle = gpul_sched_get_my_log_handle(sched_handle);
@@ -359,9 +381,16 @@ int lockSD(client_state_t *csp, char *sd_cli_prefix, long sd_seqnum, char *event
   if (csp->db_ctx == NULL)
   {
     csp->db_ctx = sms_db_find_ctx(log_handle, DB_SMS);
+    release_db_ctx = 1;
   }
 
   ret = HA_SMSSQL_SetLock(&(csp->db_ctx->sql_ctx), sd_cli_prefix, sd_seqnum, &update_lock_state);
+
+  if (release_db_ctx)
+  {
+    sms_db_release_ctx(csp->db_ctx);
+  }
+
   if (ret == ERR_DB_NOTFOUND)
   {
     LogWriteExt2(LOG_ERROR, sd_cli_prefix, sd_seqnum, event, " SD NOT FOUND in the database\n");
@@ -391,6 +420,7 @@ int lockSD(client_state_t *csp, char *sd_cli_prefix, long sd_seqnum, char *event
 int unlockSD(client_state_t *csp, char *sd_cli_prefix, long sd_seqnum, char *event)
 {
   int ret;
+  int release_db_ctx = 0;
   void *log_handle;
 
   log_handle = gpul_sched_get_my_log_handle(sched_handle);
@@ -398,9 +428,16 @@ int unlockSD(client_state_t *csp, char *sd_cli_prefix, long sd_seqnum, char *eve
   if (csp->db_ctx == NULL)
   {
     csp->db_ctx = sms_db_find_ctx(log_handle, DB_SMS);
+    release_db_ctx = 1;
   }
 
   ret = HA_SMSSQL_UnLock(&(csp->db_ctx->sql_ctx), sd_cli_prefix, sd_seqnum);
+
+  if (release_db_ctx)
+  {
+    sms_db_release_ctx(csp->db_ctx);
+  }
+
   if (ret == ERR_DB_NOTFOUND)
   {
     LogWriteExt2(LOG_ERROR, sd_cli_prefix, sd_seqnum, event, " SD NOT FOUND in the database\n");
@@ -948,7 +985,7 @@ int updateConfig(client_state_t *csp, sd_info_t *sd_info, char *event)
   RELEASE_BD_CTX(csp);
 
   // Save the running config
-  save_running_conf(sd_info, "update", NULL);
+  save_running_conf(&(sd_info->SD), "update", NULL);
 
   return ret;
 }

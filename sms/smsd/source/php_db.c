@@ -164,6 +164,7 @@ int sms_bd_init_provstatus(long lcsp, long lsd_info, int num_stages, zval *lstag
   client_state_t *csp = (client_state_t *) lcsp;
   int ret = SMS_OK;
   int i;
+  int release_db_ctx = 0;
   char **stage_names;
   void *log_handle;
 
@@ -202,12 +203,18 @@ int sms_bd_init_provstatus(long lcsp, long lsd_info, int num_stages, zval *lstag
     if (csp->db_ctx == NULL)
     {
       csp->db_ctx = sms_db_find_ctx(log_handle, DB_SMS);
+      release_db_ctx = 1;
     }
 
     ret = HA_SMSSQL_InitProvStatus(&(csp->db_ctx->sql_ctx), SD->sd_cli_prefix, SD->sd_seqnum, num_stages, stage_names);
     if (ret != SMS_OK)
     {
       GLogERROR(log_handle, "Init Prov Status Failed: %s (%d)", get_error_message(ret), ret);
+    }
+    
+    if (release_db_ctx)
+    {
+      sms_db_release_ctx(csp->db_ctx);
     }
   }
 
@@ -238,6 +245,7 @@ int sms_bd_set_provstatus(long lcsp, long lsd_info, int stage_index, char *statu
   char *error_message = "";
   int ret;
   unsigned int error_code;
+  int release_db_ctx = 0;
   void *log_handle;
 
   log_handle = gpul_sched_get_my_log_handle(sched_handle);
@@ -251,6 +259,7 @@ int sms_bd_set_provstatus(long lcsp, long lsd_info, int stage_index, char *statu
   if (csp->db_ctx == NULL)
   {
     csp->db_ctx = sms_db_find_ctx(log_handle, DB_SMS);
+    release_db_ctx = 1;
   }
 
   error_code = get_error_code_num(error_id);
@@ -278,6 +287,11 @@ int sms_bd_set_provstatus(long lcsp, long lsd_info, int stage_index, char *statu
 
   ret = HA_SMSSQL_SetProvStatus(&(csp->db_ctx->sql_ctx), SD->sd_cli_prefix, SD->sd_seqnum, stage_index, status, next_status, error_code, error_message);
 
+  if (release_db_ctx)
+  {
+    sms_db_release_ctx(csp->db_ctx);
+  }
+
   return ret;
 }
 
@@ -294,6 +308,7 @@ long sms_bd_get_provstatus(long lcsp, long lsd_info, int stage_index)
   client_state_t *csp = (client_state_t *) lcsp;
   sd_provstatus_like_t *provstatus;
   int ret;
+  int release_db_ctx = 0;
   void *log_handle;
 
   log_handle = gpul_sched_get_my_log_handle(sched_handle);
@@ -313,9 +328,16 @@ long sms_bd_get_provstatus(long lcsp, long lsd_info, int stage_index)
   if (csp->db_ctx == NULL)
   {
     csp->db_ctx = sms_db_find_ctx(log_handle, DB_SMS);
+    release_db_ctx = 1;
   }
 
   ret = HA_SMSSQL_GetProvStatus(&(csp->db_ctx->sql_ctx), provstatus);
+
+  if (release_db_ctx)
+  {
+    sms_db_release_ctx(csp->db_ctx);
+  }
+
   if (ret)
   {
     free(provstatus);
@@ -382,6 +404,7 @@ int sms_bd_set_poll_mode(long lcsp, long lsd_info, int poll_mode)
   sd_like_t *SD;
   client_state_t *csp = (client_state_t *) lcsp;
   int ret;
+  int release_db_ctx = 0;
   void *log_handle;
 
   log_handle = gpul_sched_get_my_log_handle(sched_handle);
@@ -395,11 +418,17 @@ int sms_bd_set_poll_mode(long lcsp, long lsd_info, int poll_mode)
   if (csp->db_ctx == NULL)
   {
     csp->db_ctx = sms_db_find_ctx(log_handle, DB_SMS);
+    release_db_ctx = 1;
   }
 
   DbgWrite(DBG_INFO, "sms_bd_set_poll_mode: mode = 0x%08x\n", poll_mode);
 
   ret = HA_SMSSQL_SetPollMode(&(csp->db_ctx->sql_ctx), SD->sd_cli_prefix, SD->sd_seqnum, poll_mode);
+
+  if (release_db_ctx)
+  {
+    sms_db_release_ctx(csp->db_ctx);
+  }
 
   return ret;
 }
@@ -417,6 +446,7 @@ int sms_bd_set_ipconfig(long lcsp, long lsd_info, char *ip_addr)
   sd_like_t *SD;
   client_state_t *csp = (client_state_t *) lcsp;
   int ret;
+  int release_db_ctx = 0;
   void *log_handle;
 
   log_handle = gpul_sched_get_my_log_handle(sched_handle);
@@ -430,11 +460,17 @@ int sms_bd_set_ipconfig(long lcsp, long lsd_info, char *ip_addr)
   if (csp->db_ctx == NULL)
   {
     csp->db_ctx = sms_db_find_ctx(log_handle, DB_SMS);
+    release_db_ctx = 1;
   }
 
   DbgWrite(DBG_INFO, "sms_bd_set_ipconfig: ip = %s\n", ip_addr);
 
   ret = HA_SMSSQL_SetSDIPConfig(&(csp->db_ctx->sql_ctx), SD->sd_cli_prefix, SD->sd_seqnum, ip_addr, 1);
+
+  if (release_db_ctx)
+  {
+    sms_db_release_ctx(csp->db_ctx);
+  }
 
   return ret;
 }
@@ -446,6 +482,7 @@ int sms_bd_reset_conf_objects(long lcsp, long lsd_info)
   client_state_t *csp = (client_state_t *) lcsp;
   sd_crud_object_like_t crud_object;
   int ret;
+  int release_db_ctx = 0;
   void *log_handle;
 
   log_handle = gpul_sched_get_my_log_handle(sched_handle);
@@ -459,6 +496,7 @@ int sms_bd_reset_conf_objects(long lcsp, long lsd_info)
   if (csp->db_ctx == NULL)
   {
     csp->db_ctx = sms_db_find_ctx(log_handle, DB_SMS);
+    release_db_ctx = 1;
   }
 
   DbgWrite(DBG_INFO, "sms_bd_reset_conf_objects\n");
@@ -468,6 +506,11 @@ int sms_bd_reset_conf_objects(long lcsp, long lsd_info)
   crud_object.sd_seqnum = SD->sd_seqnum;
 
   ret = HA_SMSSQL_ResetSDCrudObjects(&(csp->db_ctx->sql_ctx), &crud_object);
+
+  if (release_db_ctx)
+  {
+    sms_db_release_ctx(csp->db_ctx);
+  }
 
   return ret;
 }
@@ -479,6 +522,7 @@ int sms_bd_set_conf_objects(long lcsp, long lsd_info, char *name, char *value)
   client_state_t *csp = (client_state_t *) lcsp;
   sd_crud_object_like_t crud_object;
   int ret;
+  int release_db_ctx = 0;
   void *log_handle;
 
   log_handle = gpul_sched_get_my_log_handle(sched_handle);
@@ -492,6 +536,7 @@ int sms_bd_set_conf_objects(long lcsp, long lsd_info, char *name, char *value)
   if (csp->db_ctx == NULL)
   {
     csp->db_ctx = sms_db_find_ctx(log_handle, DB_SMS);
+    release_db_ctx = 1;
   }
 
   DbgWrite(DBG_INFO, "sms_bd_set_conf_objects: name=%s    value=%s\n", name, value);
@@ -504,6 +549,11 @@ int sms_bd_set_conf_objects(long lcsp, long lsd_info, char *name, char *value)
 
   ret = HA_SMSSQL_SetSDCrudObjects(&(csp->db_ctx->sql_ctx), &crud_object);
 
+  if (release_db_ctx)
+  {
+    sms_db_release_ctx(csp->db_ctx);
+  }
+
   return ret;
 
 }
@@ -515,6 +565,7 @@ int sms_bd_delete_conf_objects(long lcsp, long lsd_info, char *name)
   client_state_t *csp = (client_state_t *) lcsp;
   sd_crud_object_like_t crud_object;
   int ret;
+  int release_db_ctx = 0;
   void *log_handle;
 
   log_handle = gpul_sched_get_my_log_handle(sched_handle);
@@ -528,6 +579,7 @@ int sms_bd_delete_conf_objects(long lcsp, long lsd_info, char *name)
   if (csp->db_ctx == NULL)
   {
     csp->db_ctx = sms_db_find_ctx(log_handle, DB_SMS);
+    release_db_ctx = 1;
   }
 
   DbgWrite(DBG_INFO, "sms_bd_delete_conf_objects: name=%s\n", name);
@@ -538,6 +590,11 @@ int sms_bd_delete_conf_objects(long lcsp, long lsd_info, char *name)
   strncpy(crud_object.crud_name, name, CRUD_NAME_LEN);
 
   ret = HA_SMSSQL_DeleteSDCrudObjects(&(csp->db_ctx->sql_ctx), &crud_object);
+
+  if (release_db_ctx)
+  {
+    sms_db_release_ctx(csp->db_ctx);
+  }
 
   return ret;
 

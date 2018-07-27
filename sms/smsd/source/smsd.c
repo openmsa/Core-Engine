@@ -657,6 +657,16 @@ int main(int argc, char *argv[])
           exit(-1);
         }
 
+      if (smsDbConfig->db_keep_alive >= 0)
+      {
+        task_handle = gpul_sched_new_task(sched_handle, sms_db_keep_alive, log_handle, NULL, "keep alive DB", smsDbConfig->db_keep_alive * GPUL_MILLI_PER_SEC, smsDbConfig->db_keep_alive * GPUL_MILLI_PER_SEC, GPUL_SCHED_ABSOLUTE);
+        if (!task_handle)
+        {
+          GLogERROR(currentConfig->log_handle, "can't start the keep alive DB task. Exiting !");
+          exit(-1);
+        }
+      }
+
       if (currentConfig->nightly_save_conf)
       {
     	char time[15];
