@@ -48,6 +48,7 @@ typedef struct sms_db_config
   char *ubi_sys_equipments_ipv6;
   /** ES index name */
   char *es_logindex_name;
+  int db_keep_alive;
 } sms_db_config_t;
 
 /** \struct database_context
@@ -57,16 +58,20 @@ typedef struct database_context
 {
   /** the pointer on the allocated sql context (connection to the database )*/
   sql_context sql_ctx;
-  /** db */
-  int db;
+  /** state of this context (DB_CTX_ACTIVE=used by a thread , DB_CTX_NOT_ACTIVE=not used by a thread) */
+  int state;
+  const char *caller;
 } database_context_t;
 
 extern sms_db_config_t *smsDbConfig;
 extern int sms_db_init(char *configFile);
 extern void sms_db_shutdown(void);
 extern int sms_db_alloc_ctx(void *log_handle, int db, int num_ctx);
-extern database_context_t *sms_db_find_ctx(void *log_handle, int db);
+extern database_context_t *_sms_db_find_ctx(void *log_handle, int db, const char *caller_name);
 extern void sms_db_release_ctx(database_context_t *db_ctx);
+extern int sms_db_keep_alive(void *log_handle);
+
+#define sms_db_find_ctx(log_handle, db) _sms_db_find_ctx(log_handle, db, __FUNCTION__)
 
 /* sms_sd.c */
 
@@ -186,6 +191,8 @@ extern void free_sd(sd_like_t *SD);
 extern void free_sd_info(sd_info_t *sd_info);
 extern int get_all_in_sd(sql_context *ctx, sd_info_t * sd_info);
 extern int read_config_var(sd_info_t *sd_info);
+extern int read_crud_objects(sd_info_t *sd_info);
+extern int read_crud_objects_by_name(sd_info_t *sd_info, char *crud_name);
 extern char *get_crud_object_value_by_name(sd_info_t *SDinfo, char *object_name);
 
 /* sms_db.c */
@@ -227,6 +234,8 @@ extern int HA_SMSSQL_SetSDCrudObjects(sql_context *ctx, sd_crud_object_like_t *c
 extern int HA_SMSSQL_DeleteSDCrudObjects(sql_context *ctx, sd_crud_object_like_t *crud_object);
 extern int HA_SMSSQL_GetFirstSDCrudObject(sql_context *ctx, sd_crud_object_like_t *crud_object);
 extern int HA_SMSSQL_GetNextSDCrudObject(sql_context *ctx, sd_crud_object_like_t *crud_object);
+extern int HA_SMSSQL_GetFirstSDCrudObjectByName(sql_context *ctx, sd_crud_object_like_t *crud_object, char *crud_name);
+extern int HA_SMSSQL_GetNextSDCrudObjectByName(sql_context *ctx, sd_crud_object_like_t *crud_object);
 
 extern int HA_SMSSQL_GetUpdateStatus(sql_context *ctx, sd_updatestatus_like_t *sd_updatestatus);
 extern int HA_SMSSQL_SetUpdateStatus(sql_context *ctx, sd_updatestatus_like_t *sd_updatestatus);
