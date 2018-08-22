@@ -907,6 +907,8 @@ extern SQLRETURN SMSSQL_SetSDCrudObjects(sql_context ctx, sd_crud_object_like_t 
 extern SQLRETURN SMSSQL_DeleteSDCrudObjects(sql_context ctx, sd_crud_object_like_t *Pcrud_object);
 extern SQLRETURN SMSSQL_GetFirstSDCrudObject ( sql_context ctx, sd_crud_object_like_t *Pcrud_object );
 extern SQLRETURN SMSSQL_GetNextSDCrudObject ( sql_context ctx, sd_crud_object_like_t *Pcrud_object );
+extern int SMSSQL_GetFirstSDCrudObjectByName ( sql_context ctx, sd_crud_object_like_t *Pcrud_object, char *crud_name );
+extern int SMSSQL_GetNextSDCrudObjectByName( sql_context ctx, sd_crud_object_like_t *Pcrud_object );
 
 extern SQLRETURN SMSSQL_GetFirstDedicatedServerByOperator ( sql_context ctx, dedicated_server_like_t *dedicated_server, char *cli_prefix );
 extern SQLRETURN SMSSQL_GetNextDedicatedServerByOperator ( sql_context ctx, dedicated_server_like_t *dedicated_server );

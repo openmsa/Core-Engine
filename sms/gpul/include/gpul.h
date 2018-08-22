@@ -1,6 +1,6 @@
 /**
     @file
-    @version  $Id: gpul.h 128332 2017-11-28 15:18:51Z ydu $
+    @version  $Id$
  */
 
 #ifndef _GPUL_H_

@@ -130,7 +130,7 @@ int getConfig(client_state_t *csp, char *SDid, char *event);
 
 int getActivityReport(client_state_t *csp, char *SDid, char *event);
 
-int save_running_conf(sd_info_t *SDinfo, char *str_flag_update, int *version_changed);
+int save_running_conf(sd_like_t *SD, char *str_flag_update, int *version_changed);
 
 int unarchive_conf(char *params, client_state_t *csp);
 

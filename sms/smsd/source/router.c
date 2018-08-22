@@ -120,6 +120,7 @@ int sdForceAsset(client_state_t *csp, char *SDid)
   char sd_cli_prefix[CLI_PREFIX_LEN + 1];
   long sd_seqnum;
   int ret;
+  int release_db_ctx = 0;
   void *log_handle;
 
   log_handle = gpul_sched_get_my_log_handle(sched_handle);
@@ -132,9 +133,16 @@ int sdForceAsset(client_state_t *csp, char *SDid)
   if (csp->db_ctx == NULL)
   {
     csp->db_ctx = sms_db_find_ctx(log_handle, DB_SMS);
+    release_db_ctx = 1;
   }
 
   ret = HA_SMSSQL_SetSDAssetUpdate(&(csp->db_ctx->sql_ctx), sd_cli_prefix, sd_seqnum, 1);
+
+  if (release_db_ctx)
+  {
+    sms_db_release_ctx(csp->db_ctx);
+  }
+
   if (ret)
   {
     if (ret == ERR_DB_FAILED)
@@ -281,20 +289,20 @@ int getActivityReport(client_state_t *csp, char *SDid, char *event)
   return ret;
 }
 
-int save_running_conf(sd_info_t *SDinfo, char *str_flag_update, int *version_changed)
+int save_running_conf(sd_like_t *SD, char *str_flag_update, int *version_changed)
 {
   int ret;
   char *config_type;
   char *ret_buf = NULL;
   SMS_PHP_STARTUP_THREAD();
 
-  config_type = get_router_config_type(SDinfo->SD.man_id, SDinfo->SD.mod_id);
+  config_type = get_router_config_type(SD->man_id, SD->mod_id);
 
   sms_mod_php_set_global_str("flag_update", str_flag_update TSRMLS_CC);
   sms_mod_php_set_global_str("config_type", config_type TSRMLS_CC);
-  php_store_sdinfo(SDinfo TSRMLS_CC);
+  sms_mod_php_set_global_str("sdid", SD->sdid TSRMLS_CC);
 
-  ret = sms_mod_php_execute_script(SDinfo->sdid, "smsd", "save_router_conf.php" TSRMLS_CC);
+  ret = sms_mod_php_execute_script(SD->sdid, "smsd", "save_router_conf.php" TSRMLS_CC);
   if (ret)
   {
     LogWrite(LOG_ERROR, " Script Failed\n");
@@ -601,35 +609,21 @@ int check_serial(char *params, client_state_t *csp)
 static int save_conf_task(void *vSD)
 {
   sd_like_t *SD = (sd_like_t*)vSD;
-  sd_info_t sd_info;
-  int ret = SMS_OK;
-  database_context_t *dbctx;
   int version_changed;
   void *log_handle;
 
   log_handle = gpul_sched_get_my_log_handle(sched_handle);
 
-  dbctx = sms_db_find_ctx(log_handle, DB_SMS);
-  ret = getSDinfo(dbctx, SD->sdid, &sd_info);
-  sms_db_release_ctx(dbctx);
-  if (ret)
-  {
-    GLogERROR(log_handle, "Cannot get sd info");
-    goto end;
-  }
-
-  save_running_conf(&sd_info, "daily config", &version_changed);
+  save_running_conf(SD, "daily config", &version_changed);
 
   if (version_changed && (currentConfig->alarm_sev_conf_changed > 0))
   {
     set_sd_alarm(log_handle, SD->sd_cli_prefix, SD->sd_seqnum, currentConfig->alarm_sev_conf_changed, "CONF", "Configuration has been changed");
   }
 
-  freeSDinfo(&sd_info);
+  free(SD);
 
-  end:
-
-  return ret;
+  return SMS_OK;
 }
 
 int save_all_conf(void *dummy)
@@ -637,6 +631,7 @@ int save_all_conf(void *dummy)
   int dataBaseShutdown = TRUE;
   sd_like_t *SD;
   database_context_t *dbctx;
+  int i;
   char task_name[BUFSIZ];
   int ret = SMS_OK;
   void *log_handle;
@@ -645,18 +640,21 @@ int save_all_conf(void *dummy)
 
   dbctx = sms_db_find_ctx(log_handle, DB_SMS);
 
-  SD = (sd_like_t*) calloc(1, sizeof(sd_like_t));
   dataBaseShutdown = TRUE;
   while (dataBaseShutdown == TRUE)
   {
+    i = 0;
+    SD = (sd_like_t*) calloc(1, sizeof(sd_like_t));
     ret = HA_SMSSQL_GetSDconnectedFirst(&(dbctx->sql_ctx), SD);
     if (ret == ERR_DB_FAILED)
     {
+      freez(SD);
       GLogERROR(log_handle, "Cannot get a first SD: FAILED");
       goto end;
     }
     else if (ret == ERR_DB_NOTFOUND)
     {
+      freez(SD);
       GLogINFO(log_handle, "No SD from the database");
       break;
     }
@@ -666,8 +664,13 @@ int save_all_conf(void *dummy)
     {
       if (SD->sd_connected)
       {
+        i++;
         sprintf(task_name, "save conf %s%lu", SD->sd_cli_prefix, SD->sd_seqnum);
-        gpul_sched_new_task(sched_handle, save_conf_task, SD, NULL, task_name, 0, 0, GPUL_SCHED_ABSOLUTE);
+        gpul_sched_new_task(sched_handle, save_conf_task, SD, NULL, task_name, i * 1000, 0, GPUL_SCHED_ABSOLUTE);
+      }
+      else
+      {
+        freez(SD);
       }
 
       /* try the next one */
@@ -675,11 +678,13 @@ int save_all_conf(void *dummy)
       ret = HA_SMSSQL_GetSDconnectedNext(&(dbctx->sql_ctx), SD);
       if (ret == ERR_DB_FAILED)
       {
+        freez(SD);
         GLogERROR(log_handle, "Cannot get a next SD:  FAILED in database read");
         goto end;
       }
       if (ret == ERR_DB_CONNECTION_LOST)
       {
+        freez(SD);
         GLogERROR(log_handle, "Cannot get Next SD: CONNECTION_LOST, retrying all");
         dataBaseShutdown = TRUE;
         break;
@@ -688,7 +693,6 @@ int save_all_conf(void *dummy)
   }/*end while databaseshutdown */
 
   end:
-  freez(SD);
   sms_db_release_ctx(dbctx);
 
   return SMS_OK;
