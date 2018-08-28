@@ -1,1 +1,1 @@
-OpenMSA-1.1 (BETA) Core Engine v1.1.0
+OpenMSA-1.1 Core Engine v1.1.0
