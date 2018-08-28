@@ -31,6 +31,8 @@ Installing
 ----------
 
 - ssh to the OpenMSA as root
+- wget `http://repository.ubiqube.com/share/OpenMSA/unixODBC-devel-16.2.2-1.el6.x86_64.rpm`
+- rpm -i `unixODBC-devel-16.2.2-1.el6.x86_64.rpm`
 - git clone this repository
 - run: `cd sms && make && make install`
 - run: `make restart`
