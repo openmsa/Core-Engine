@@ -12,3 +12,5 @@ fi
 cp -f smsd/object/x86_64/smsd /opt/sms/bin
 chown ncuser: /opt/sms/bin/smsd
 chmod 750 /opt/sms/bin/smsd
+
+(cd /opt/sms/bin/php/; patch -p0) < add-object_to_json.patch
