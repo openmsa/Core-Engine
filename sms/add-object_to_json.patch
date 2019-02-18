@@ -1,0 +1,15 @@
+--- smsd/sms_common.php.orig	2019-02-18 20:51:38.731997630 +0100
++++ smsd/sms_common.php	2019-02-18 20:51:42.419978833 +0100
+@@ -1065,6 +1065,13 @@
+ }
+ 
+ /**
++ * Wrap calls to json_encode for objects returned by DA code
++ */
++function object_to_json($object) {
++	return json_encode($object, JSON_FORCE_OBJECT);
++}
++
++/**
+  * @}
+  */
